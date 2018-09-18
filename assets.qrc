@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/fonts/SourceSansPro-Light.ttf</file>
+        <file>assets/fonts/SourceSansPro-Regular.ttf</file>
+        <file>assets/fonts/ClearSans-Bold.ttf</file>
+        <file>assets/fonts/ClearSans-BoldItalic.ttf</file>
+        <file>assets/fonts/ClearSans-Italic.ttf</file>
+        <file>assets/fonts/ClearSans-Light.ttf</file>
+        <file>assets/fonts/ClearSans-Medium.ttf</file>
+        <file>assets/fonts/ClearSans-MediumItalic.ttf</file>
+        <file>assets/fonts/ClearSans-Regular.ttf</file>
+        <file>assets/fonts/ClearSans-Thin.ttf</file>
+    </qresource>
+</RCC>
