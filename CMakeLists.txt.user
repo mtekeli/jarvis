@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.8.2, 2019-03-11T17:40:50. -->
+<!-- Written by QtCreator 4.8.2, 2019-03-12T18:52:25. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -355,7 +355,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/private/var/folders/xq/q7t0b_w57bg7kmh693gyg4c40000gn/T/QtCreator-AgfCfC/qtc-cmake-cDDcTChr</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/Users/mustafatekeli/dev/ws/build-jarvis-Desktop_Qt_5_12_1_clang_64bit-Release</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
