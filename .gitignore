@@ -26,7 +26,6 @@ qrc_*.cpp
 ui_*.h
 *.qmlc
 *.jsc
-Makefile*
 *build-*
 
 # Qt unit tests
@@ -44,3 +43,6 @@ CMakeLists.txt.user
 CMakeFiles
 CMakeCache.txt
 *.user
+src/.DS_Store
+src/view/.DS_Store
+.DS_Store

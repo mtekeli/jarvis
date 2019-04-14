@@ -6,7 +6,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-#include "measurement.h"
+#include "measurement.hpp"
 
 class RoomService : public QObject
 {

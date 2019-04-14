@@ -5,7 +5,7 @@
 #include <QtDebug>
 #include <QQmlApplicationEngine>
 
-#include "roomservice.h"
+#include "libjarvis/roomservice.hpp"
 
 class App : public QGuiApplication
 {
@@ -15,7 +15,7 @@ public:
 
 private:
     QQmlApplicationEngine engine = {this};
-    RoomService rs {"http://192.168.1.77:8080", 1000};
+    RoomService _rs {"http://192.168.1.77:8080", 1000};
 };
 
 #endif // APP_H
