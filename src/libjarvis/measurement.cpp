@@ -1,4 +1,4 @@
-#include "measurement.h"
+#include "measurement.hpp"
 
 #include <QDebug>
 

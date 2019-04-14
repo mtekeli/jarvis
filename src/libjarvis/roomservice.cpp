@@ -1,4 +1,4 @@
-#include "roomservice.h"
+#include "roomservice.hpp"
 
 namespace helpers {
 Measurement* parseMeasurement(const QString& value, QObject* parent) {
