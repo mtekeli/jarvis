@@ -64,15 +64,6 @@ Window {
             color: "#FFFFFF"
             font.family: mainFontRegular.name
         }
-        /*Text {
-            id: timeView2
-            font.pointSize: 70
-            anchors.horizontalCenter: timeView.horizontalCenter
-            anchors.top: timeView.bottom
-            color: "#FFFFFF"
-            font.family: mainFontLight.name
-            text: timeView.text
-        }*/
 
         Text {
             id: dateView
