@@ -8,6 +8,11 @@ build:
 install: build
 	@ cd bin && make install
 
+deploy:
+	@ ssh ${JARVIS_HOST} 'sudo systemctl stop jarvis.service'
+	@ scp bin/src/jarvis $(JARVIS_HOST):/home/pi
+	@ ssh ${JARVIS_HOST} 'sudo systemctl start jarvis.service'
+
 config: clean
 	@ mkdir -p bin
 	@ cd bin && cmake ../
