@@ -8,10 +8,10 @@ build:
 install: build
 	@ cd bin && make install
 
-deploy:
-	@ ssh ${JARVIS_HOST} 'sudo systemctl stop jarvis.service'
-	@ scp bin/src/jarvis $(JARVIS_HOST):/home/pi
-	@ ssh ${JARVIS_HOST} 'sudo systemctl start jarvis.service'
+deploy: install
+	@ ssh ${JARVIS_DOMAIN} 'sudo systemctl stop jarvis.service'
+	@ scp output/bin/jarvis $(JARVIS_DOMAIN):/home/pi
+	@ ssh ${JARVIS_DOMAIN} 'sudo systemctl start jarvis.service'
 
 config: clean
 	@ mkdir -p bin
@@ -25,12 +25,16 @@ qtc:
 	@ qtcreator $(ROOT_DIR)/CMakeLists.txt
 
 docker:
-	@ docker build -t mustafatekeli/jarvis-cross-compile .
+	@ mkdir -p .ssh && cp ${SSH_KEY_FILE} .ssh/id_rsa
+	@ docker build -t mustafatekeli/jarvis-cross-compile \
+		--build-arg JARVIS_HOST=${JARVIS_HOST} \
+		.
 	@ docker run --rm -it --name qt-build \
 		-v /Users/mustafatekeli/dev/ws/jarvis:/root/jarvis \
 		--workdir=//root/jarvis \
 		--env BUILD_NAME=linux-armhf-rpi \
-		--env JARVIS_HOST=$(JARVIS_HOST)
+		--env JARVIS_HOST=${JARVIS_HOST} \
+		--env JARVIS_DOMAIN=${JARVIS_DOMAIN} \
 		mustafatekeli/jarvis-cross-compile
 
 clean:

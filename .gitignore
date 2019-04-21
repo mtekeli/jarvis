@@ -45,6 +45,7 @@ target_wrapper.*
 CMakeLists.txt.user
 CMakeFiles
 CMakeCache.txt
+.ssh
 *.user
 src/.DS_Store
 src/view/.DS_Store

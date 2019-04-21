@@ -1,5 +1,6 @@
 FROM mustafatekeli/qtbuilder:amd64-rpi-cross-compile-base-5.12.3
 
+ARG JARVIS_HOST
 ARG QT_VERSION=5.12.3
 ARG RPI_DIR=/root/raspi
 ARG DEV_BINS=${RPI_DIR}/qt5pi
@@ -47,3 +48,10 @@ RUN cd ${QT_MODULES}/qtmultimedia \
 	&& ${HOST_BINS}/bin/qmake \
 	&& make -j4 \
 	&& make install 
+
+# copy over the ssh profile to connect to rpi
+RUN rm -rf /root/.ssh/id_rsa
+COPY .ssh/id_rsa /root/.ssh/id_rsa
+# make sure your domain is accepted
+RUN touch /root/.ssh/known_hosts
+RUN ssh-keyscan ${JARVIS_HOST} >> /root/.ssh/known_hosts
