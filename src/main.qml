@@ -29,39 +29,42 @@ Window {
         }
     }
 
-    Meter {
-        id: meterTemp
-        width: 85
-        height: width
-        fontName: mainFontLight.name
-        primaryText: initialized && roomService.temperature ? roomService.temperature.real : primaryText
-        primaryTextSize: 70
-        secondaryText: initialized && roomService.temperature ? roomService.temperature.decimals.substring(0,1) + "°" : secondaryText
-    }
+    Item {
+        anchors.fill: parent
 
-    Meter {
-        id: meterHum
-        anchors.top: meterTemp.bottom
-        anchors.topMargin: 10
-        width: meterTemp.width
-        fontName: mainFontLight.name
-        primaryText: initialized && roomService.humidity ? roomService.humidity.real : primaryText
-        secondaryText: initialized && roomService.humidity ? roomService.humidity.decimals.substring(0,1) + "%" : secondaryText
-    }
+        Meter {
+            id: meterTemp
+            width: 85
+            height: width
+            fontName: mainFontLight.name
+            primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
+            primaryTextSize: 70
+            secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
+        }
 
-    Component.onCompleted: {
-        roomService.start()
-        initialized = true
-    }
+        Meter {
+            id: meterHum
+            anchors.top: meterTemp.bottom
+            anchors.topMargin: 10
+            width: meterTemp.width
+            fontName: mainFontLight.name
+            primaryText: initialized && RoomService.humidity ? RoomService.humidity.real : primaryText
+            secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) + "%" : secondaryText
+        }
 
-    Text {
-        id: timeView
-        font.pointSize: 70
-        anchors.horizontalCenter: parent.horizontalCenter
-        color: "#FFFFFF"
-        font.family: mainFontRegular.name
-    }
-    /*Text {
+        Component.onCompleted: {
+            RoomService.start()
+            initialized = true
+        }
+
+        Text {
+            id: timeView
+            font.pointSize: 70
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: "#FFFFFF"
+            font.family: mainFontRegular.name
+        }
+        /*Text {
             id: timeView2
             font.pointSize: 70
             anchors.horizontalCenter: timeView.horizontalCenter
@@ -71,14 +74,22 @@ Window {
             text: timeView.text
         }*/
 
-    Text {
-        id: dateView
-        font.pointSize: 25
-        anchors.top: timeView.bottom
-        anchors.topMargin: -10
-        anchors.horizontalCenter: timeView.horizontalCenter
-        color: "#FFFFFF"
-        font.family: mainFontLight.name
+        Text {
+            id: dateView
+            font.pointSize: 25
+            anchors.top: timeView.bottom
+            anchors.topMargin: -10
+            anchors.horizontalCenter: timeView.horizontalCenter
+            color: "#FFFFFF"
+            font.family: mainFontLight.name
+        }
+
+        Text {
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: App.version
+            color: "#FFFFFF"
+        }
     }
 }
 
