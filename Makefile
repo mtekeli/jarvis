@@ -34,4 +34,4 @@ docker:
 		mustafatekeli/jarvis-cross-compile
 
 clean:
-	@ rm -rf ./bin || true
+	@ rm -rf ./bin && rm -rf ./output || true

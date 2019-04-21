@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.1)
-
 add_executable(${PROJECT_NAME}
     "app.cpp"
     "app.hpp"
@@ -27,4 +25,5 @@ set (EXTRA_LIBS ${EXTRA_LIBS} libjarvis)
 
 target_link_libraries(${PROJECT_NAME} ${EXTRA_LIBS})
 
-
+# add the install targets
+install (TARGETS ${PROJECT_NAME} DESTINATION bin)
