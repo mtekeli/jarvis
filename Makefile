@@ -1,6 +1,6 @@
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-.PHONY: build, config, config-rpi build, install, deploy, docker, qtc, clean
+.PHONY: build, config, config-rpi build, fmt, install, deploy, docker, qtc, clean
 
 build:
 	@ cd bin && make
@@ -15,11 +15,11 @@ deploy: install
 
 config: clean
 	@ mkdir -p bin
-	@ cd bin && cmake ../
+	@ cd bin && cmake ${CMAKE_OPTIONS} ../
 
 config-rpi: clean
 	@ mkdir -p bin
-	@ cd bin && cmake -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake ../
+	@ cd bin && cmake ${CMAKE_OPTIONS} -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake ../
 
 qtc:
 	@ qtcreator $(ROOT_DIR)/CMakeLists.txt
@@ -36,6 +36,9 @@ docker:
 		--env JARVIS_HOST=${JARVIS_HOST} \
 		--env JARVIS_DOMAIN=${JARVIS_DOMAIN} \
 		mustafatekeli/jarvis-cross-compile
+
+fmt: config
+	@ cd bin && make fmt
 
 clean:
 	@ rm -rf ./bin && rm -rf ./output || true
