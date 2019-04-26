@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QTimer>
 #include <QNetworkAccessManager>
-#include <QNetworkReply>
 
-#include "measurement.hpp"
+class Measurement;
+class QNetworkReply;
 
 class RoomService : public QObject
 {
@@ -19,22 +19,22 @@ class RoomService : public QObject
 public:
     explicit RoomService(const QString& apiAddress, const int interval, QObject* parent = nullptr);
 
-    Measurement* temperature() { return temp; }
-    Measurement* humidity() { return hum; }
-    QString apiAddr() const { return addr; }
-    int interval() { return interv; }
+    Measurement* temperature() const { return _temp; }
+    Measurement* humidity() const { return _hum; }
+    QString apiAddr() const { return _address; }
+    int interval() const { return _interval; }
 
 signals:
-    void temperatureChanged();
-    void humidityChanged();
+    void temperatureChanged(QPrivateSignal);
+    void humidityChanged(QPrivateSignal);
 
 private:
-    Measurement *temp = nullptr;
-    Measurement *hum = nullptr;
-    QString addr = "";
-    int interv = 0;
-    QTimer apiTimer;
-    QNetworkAccessManager net;
+    Measurement* _temp = nullptr;
+    Measurement* _hum = nullptr;
+    QString _address = "";
+    int _interval = 0;
+    QTimer _apiTimer;
+    QNetworkAccessManager _net;
 
     void setTemperature(Measurement* m);
     void setHumidity(Measurement* m);

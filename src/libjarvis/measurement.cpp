@@ -15,12 +15,18 @@ Measurement::~Measurement()
 
 void Measurement::setReal(const QString &value)
 {
+    if (_real == value)
+        return;
+
     _real = value;
     emit realChanged();
 }
 
 void Measurement::setDecimals(const QString &value)
 {
+    if (_decimals == value)
+        return;
+
     _decimals = value;
     emit decimalsChanged();
 }

@@ -2,7 +2,6 @@
 #define APP_H
 
 #include <QGuiApplication>
-#include <QtDebug>
 #include <QQmlApplicationEngine>
 
 #include "libjarvis/roomservice.hpp"

@@ -13,8 +13,12 @@ Window {
     FontLoader { id: mainFontRegular; source: "qrc:/assets/fonts/ClearSans-Regular.ttf" }
     FontLoader { id: mainFontLight; source: "qrc:/assets/fonts/ClearSans-Thin.ttf" }
 
+    Component.onCompleted: {
+        RoomService.start()
+        initialized = true
+    }
+
     Timer {
-        id: timerSecond
         interval: 1000
         repeat: true
         running: initialized
@@ -29,9 +33,11 @@ Window {
         }
     }
 
+    //
     Item {
         anchors.fill: parent
 
+        // temperature
         Meter {
             id: meterTemp
             width: 85
@@ -42,8 +48,8 @@ Window {
             secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
         }
 
+        // humidity
         Meter {
-            id: meterHum
             anchors.top: meterTemp.bottom
             anchors.topMargin: 10
             width: meterTemp.width
@@ -52,19 +58,17 @@ Window {
             secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) + "%" : secondaryText
         }
 
-        Component.onCompleted: {
-            RoomService.start()
-            initialized = true
-        }
-
+        // current time
         Text {
             id: timeView
             font.pointSize: 70
             anchors.horizontalCenter: parent.horizontalCenter
             color: "#FFFFFF"
             font.family: mainFontRegular.name
+            text: "-- --"
         }
 
+        // current date
         Text {
             id: dateView
             font.pointSize: 25
@@ -75,6 +79,7 @@ Window {
             font.family: mainFontLight.name
         }
 
+        // version
         Text {
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter

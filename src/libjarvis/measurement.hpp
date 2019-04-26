@@ -8,6 +8,7 @@ class Measurement : public QObject
     Q_OBJECT
     Q_PROPERTY(QString real READ real WRITE setReal NOTIFY realChanged)
     Q_PROPERTY(QString decimals READ decimals WRITE setDecimals NOTIFY decimalsChanged)
+
 public:
     explicit Measurement(const QString& real, const QString& decimals, QObject *parent = nullptr);
     ~Measurement();

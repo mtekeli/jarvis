@@ -1,6 +1,6 @@
 #include "app.hpp"
 #include "jarvis_config.h"
-//#include "model/measurement.hpp"
+#include "libjarvis/measurement.hpp"
 
 #include <QQmlContext>
 
@@ -13,6 +13,8 @@ App::App(int argc, char* argv[]) : QGuiApplication(argc, argv), _version{QString
     //qmlRegisterUncreatableType<Measurement>("com.mtekeli.mirror", 1, 0, "Measurement", "Cannot init from QML");
     //qmlRegisterUncreatableType<Measurement>("com.mtekeli.mirror", 1, 0, "Measurement", "Cannot init from QML");
     //qmlRegisterUncreatableType<RoomService>("com.mtekeli.mirror", 1, 0, "RoomService", "Cannot init from QML");
+    //qmlRegisterUncreatableType<Measurement*>("com.mtekeli.mirror", 1, 0, "Measurement*", "Cannot init from QML");
+    qRegisterMetaType<Measurement*>("Measurement");
 
     engine.addImportPath("qrc:/");
     engine.rootContext()->setContextProperty(QStringLiteral("RoomService"), &_rs);

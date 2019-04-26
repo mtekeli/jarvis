@@ -1,4 +1,7 @@
 #include "roomservice.hpp"
+#include "measurement.hpp"
+
+#include <QNetworkReply>
 
 namespace helpers {
 Measurement* parseMeasurement(const QString& value, QObject* parent) {
@@ -12,11 +15,10 @@ Measurement* parseMeasurement(const QString& value, QObject* parent) {
     return new Measurement{figures[0], figures[1], parent};
 }
 
-QList<Measurement*> parseRoomReply(const QByteArray& value, QObject* parent) {
+QPair<Measurement*, Measurement*> parseRoomReply(const QByteArray& value, QObject* parent) {
     const auto results = value.split(',');
-    if (results.length()<2){
+    if (results.length()<2)
         return {};
-    }
 
     const auto m1 = parseMeasurement(results[0], parent);
     const auto m2 = parseMeasurement(results[1], parent);
@@ -29,36 +31,36 @@ RoomService::RoomService(const QString &apiAddress, const int interval, QObject 
     setApiAddr(apiAddress);
     setInterval(interval);
 
-    connect(&net, &QNetworkAccessManager::finished, this, &RoomService::processReply);
-    connect(&apiTimer, &QTimer::timeout, this, &RoomService::getMeasurements);
+    connect(&_net, &QNetworkAccessManager::finished, this, &RoomService::processReply);
+    connect(&_apiTimer, &QTimer::timeout, this, &RoomService::getMeasurements);
 }
 
 void RoomService::setTemperature(Measurement *m)
 {
-    if (temp == m)
+    if (_temp == m)
         return;
 
-    if (temp) {
-        temp->deleteLater();
-        temp = nullptr;
+    if (_temp) {
+        _temp->deleteLater();
+        _temp = nullptr;
     }
 
-    temp = m;
-    emit temperatureChanged();
+    _temp = m;
+    emit temperatureChanged({});
 }
 
 void RoomService::setHumidity(Measurement *m)
 {
-    if (hum == m)
+    if (_hum == m)
         return;
 
-    if (hum) {
-        hum->deleteLater();
-        hum = nullptr;
+    if (_hum) {
+        _hum->deleteLater();
+        _hum = nullptr;
     }
 
-    hum = m;
-    emit humidityChanged();
+    _hum = m;
+    emit humidityChanged({});
 }
 
 void RoomService::processReply(QNetworkReply *reply)
@@ -66,9 +68,8 @@ void RoomService::processReply(QNetworkReply *reply)
     const auto result = reply->readAll();
     reply->deleteLater();
     qDebug() << result;
-    QList<Measurement*> roomInfo;
-    Measurement* temp;
-    Measurement* hum;
+    Measurement* temperature;
+    Measurement* humidity;
 
     try {
         if (reply->error() != QNetworkReply::NoError) {
@@ -79,53 +80,59 @@ void RoomService::processReply(QNetworkReply *reply)
             throw std::invalid_argument("no room information was returned");
         }
 
-        roomInfo = helpers::parseRoomReply(result, this);
-        if (roomInfo.length() == 0) {
-            throw std::invalid_argument("no room information available");
+        {
+            const auto roomInfo = helpers::parseRoomReply(result, this);
+            temperature = roomInfo.first;
+            humidity = roomInfo.second;
         }
 
-        temp = roomInfo.at(0);
-        hum = roomInfo.at(1);
+        if (temperature || humidity)
+            throw std::invalid_argument("no room information available");
+
     } catch (std::exception& e) {
         qDebug() << "exception occured during parse:" << e.what();
-        temp = new Measurement{"0", "0", this};
-        hum = temp;
         return;
     }
 
-    setTemperature(temp);
-    setHumidity(hum);
+    setTemperature(temperature);
+    setHumidity(humidity);
 }
 
 void RoomService::setApiAddr(const QString &addr)
 {
-    this->addr = addr;
+    if (_address == addr)
+        return;
+
+    _address = addr;
 }
 
 void RoomService::setInterval(int interval)
 {
-    this->interv=interval;
-    qDebug() << "interval changed to " << this->interval();
+    if (_interval == interval)
+        return;
+
+    _interval=interval;
+    qDebug() << "interval changed to " << _interval;
 }
 
 void RoomService::getMeasurements()
 {
-    if (addr == "")
+    if (_address == "")
         return;
 
-    net.get(QNetworkRequest(QUrl(addr)));
+    _net.get(QNetworkRequest{QUrl{_address}});
 }
 
 void RoomService::start()
 {
-    qDebug() << "starting with interval of "<< interval();
+    qDebug() << "starting with interval of "<< _interval;
     getMeasurements();
-    apiTimer.start(interval());
+    _apiTimer.start(_interval);
 }
 
 void RoomService::stop()
 {
-    apiTimer.stop();
+    _apiTimer.stop();
 }
 
 void RoomService::restart() {
