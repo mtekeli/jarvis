@@ -20,7 +20,7 @@ public:
 private:
     QQmlApplicationEngine engine = {this};
     QString _version;
-    RoomService _rs {QStringLiteral("http://192.168.1.77:8080"), 1000};
+    RoomService _rs{QStringLiteral("http://192.168.1.77:8080"), 1000};
 };
 
 #endif // APP_H
