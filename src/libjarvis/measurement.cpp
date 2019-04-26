@@ -4,12 +4,12 @@
 
 Measurement::Measurement(const QString &real, const QString &decimals, QObject *parent) : QObject{parent}, _real(real), _decimals(decimals)
 {
-    qDebug() << "CREATING MEASUREMENT "<< this;
+    qDebug() << QStringLiteral("CREATING MEASUREMENT ")<< this;
 }
 
 Measurement::~Measurement()
 {
-    qDebug() << "DELETING MEASUREMENT "<< this;
+    qDebug() << QStringLiteral("DELETING MEASUREMENT ")<< this;
 }
 
 
@@ -19,7 +19,7 @@ void Measurement::setReal(const QString &value)
         return;
 
     _real = value;
-    emit realChanged();
+    emit realChanged({});
 }
 
 void Measurement::setDecimals(const QString &value)
@@ -28,5 +28,5 @@ void Measurement::setDecimals(const QString &value)
         return;
 
     _decimals = value;
-    emit decimalsChanged();
+    emit decimalsChanged({});
 }

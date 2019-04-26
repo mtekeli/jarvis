@@ -5,7 +5,7 @@
 
 namespace helpers {
 Measurement* parseMeasurement(const QString& value, QObject* parent) {
-    if (!value.contains("."))
+    if (!value.contains(QStringLiteral(".")))
         return nullptr;
 
     const auto figures = value.split('.');
@@ -67,7 +67,14 @@ void RoomService::processReply(QNetworkReply *reply)
 {
     const auto result = reply->readAll();
     reply->deleteLater();
-    qDebug() << result;
+
+    if (result.isEmpty())
+    {
+        qDebug() << QStringLiteral("no data received");
+        return;
+    }
+
+    qDebug() << QStringLiteral("received data:") << result;
     Measurement* temperature;
     Measurement* humidity;
 
@@ -90,7 +97,7 @@ void RoomService::processReply(QNetworkReply *reply)
             throw std::invalid_argument("no room information available");
 
     } catch (std::exception& e) {
-        qDebug() << "exception occured during parse:" << e.what();
+        qDebug() << QStringLiteral("exception occured during parse:") << e.what();
         return;
     }
 
@@ -112,7 +119,7 @@ void RoomService::setInterval(int interval)
         return;
 
     _interval=interval;
-    qDebug() << "interval changed to " << _interval;
+    qDebug() << QStringLiteral("interval changed to ") << _interval;
 }
 
 void RoomService::getMeasurements()
@@ -125,7 +132,7 @@ void RoomService::getMeasurements()
 
 void RoomService::start()
 {
-    qDebug() << "starting with interval of "<< _interval;
+    qDebug() << QStringLiteral("starting with interval of ") << _interval;
     getMeasurements();
     _apiTimer.start(_interval);
 }

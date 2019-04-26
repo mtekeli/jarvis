@@ -16,8 +16,8 @@ public:
     void setDecimals(const QString& value);
 
 signals:
-    void realChanged();
-    void decimalsChanged();
+    void realChanged(QPrivateSignal);
+    void decimalsChanged(QPrivateSignal);
 
 public slots:
     QString real() const { return _real; }
