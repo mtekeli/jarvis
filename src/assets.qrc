@@ -10,5 +10,8 @@
         <file>assets/fonts/ClearSans-MediumItalic.ttf</file>
         <file>assets/fonts/ClearSans-Regular.ttf</file>
         <file>assets/fonts/ClearSans-Thin.ttf</file>
+        <file>assets/svg/thermometer.svg</file>
+        <file>assets/svg/humidity.svg</file>
+        <file>assets/svg/sun.svg</file>
     </qresource>
 </RCC>

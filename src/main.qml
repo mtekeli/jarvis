@@ -37,31 +37,10 @@ Window {
     Item {
         anchors.fill: parent
 
-        // temperature
-        Meter {
-            id: meterTemp
-            width: 85
-            height: width
-            fontName: mainFontLight.name
-            primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
-            primaryTextSize: 70
-            secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
-        }
-
-        // humidity
-        Meter {
-            anchors.top: meterTemp.bottom
-            anchors.topMargin: 10
-            width: meterTemp.width
-            fontName: mainFontLight.name
-            primaryText: initialized && RoomService.humidity ? RoomService.humidity.real : primaryText
-            secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) + "%" : secondaryText
-        }
-
         // current time
         Text {
             id: timeView
-            font.pointSize: 70
+            font.pointSize: 90
             anchors.horizontalCenter: parent.horizontalCenter
             color: "#FFFFFF"
             font.family: mainFontRegular.name
@@ -71,12 +50,95 @@ Window {
         // current date
         Text {
             id: dateView
-            font.pointSize: 25
+            font.pointSize: 35
             anchors.top: timeView.bottom
             anchors.topMargin: -10
             anchors.horizontalCenter: timeView.horizontalCenter
             color: "#FFFFFF"
             font.family: mainFontLight.name
+        }
+    }
+
+    // footer
+    Item {
+        width: parent.width
+        height: 240
+        anchors.bottom: parent.bottom
+
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 80
+
+            Item {
+                width: 85
+                height: width
+
+                Image {
+                    id: thermometerIcon
+                    source: "assets/svg/thermometer.svg"
+                    width: 64
+                    fillMode: Image.PreserveAspectFit
+                }
+
+                Meter {
+                    anchors.top: thermometerIcon.bottom
+                    width: parent.width
+                    height: width
+                    fontName: mainFontLight.name
+                    primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
+                    primaryTextSize: 70
+                    secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
+                }
+            }
+
+            Item {
+                width: 85
+                height: width
+
+                Image {
+                    id: humidityIcon
+                    source: "assets/svg/humidity.svg"
+                    width: 64
+                    fillMode: Image.PreserveAspectFit
+                }
+
+                Meter {
+                    anchors.top: humidityIcon.bottom
+                    width: parent.width
+                    height: width
+                    fontName: mainFontLight.name
+                    primaryTextSize: 70
+                    primaryText: initialized && RoomService.humidity ? RoomService.humidity.real : primaryText
+                    secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) + "%" : secondaryText
+                }
+            }
+
+            Item {
+                width: 85
+                height: width
+
+                Rectangle {
+                    anchors.fill: parent
+                    color: "red"
+                }
+
+                Image {
+                    id: forecastIcon
+                    source: "assets/svg/sun.svg"
+                    width: 64
+                    fillMode: Image.PreserveAspectFit
+                }
+
+                Meter {
+                    anchors.top: forecastIcon.bottom
+                    width: parent.width
+                    height: width
+                    fontName: mainFontLight.name
+                    primaryTextSize: 70
+                    primaryText: initialized && RoomService.humidity ? RoomService.humidity.real : primaryText
+                    secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) + "%" : secondaryText
+                }
+            }
         }
 
         // version
@@ -88,4 +150,3 @@ Window {
         }
     }
 }
-
