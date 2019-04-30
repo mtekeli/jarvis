@@ -33,7 +33,7 @@ Window {
         }
     }
 
-    //
+    // date and time
     Item {
         anchors.fill: parent
 
@@ -67,76 +67,99 @@ Window {
 
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 80
+            height: parent.height
+            spacing: 60
 
+            // thermometer
             Item {
-                width: 85
-                height: width
+                width: 160
+                height: parent.height
 
                 Image {
                     id: thermometerIcon
+                    anchors.horizontalCenter: parent.horizontalCenter
                     source: "assets/svg/thermometer.svg"
                     width: 64
+                    height: width
                     fillMode: Image.PreserveAspectFit
                 }
 
                 Meter {
                     anchors.top: thermometerIcon.bottom
-                    width: parent.width
-                    height: width
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: parent.height
                     fontName: mainFontLight.name
-                    primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
                     primaryTextSize: 70
+                    primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
                     secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
                 }
             }
 
+            // humidity
             Item {
-                width: 85
-                height: width
+                width: 160
+                height: parent.height
 
-                Image {
-                    id: humidityIcon
-                    source: "assets/svg/humidity.svg"
-                    width: 64
-                    fillMode: Image.PreserveAspectFit
+                Item {
+                    id: humidityItem
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: 96
+                    height: 64
+
+                    Image {
+                        id: humidityIcon
+
+                        source: "assets/svg/humidity.svg"
+                        width: 64
+                        height: width
+                        fillMode: Image.PreserveAspectFit
+                    }
+
+                    Image {
+                        anchors.left: humidityIcon.right
+                        anchors.top: humidityIcon.top
+                        anchors.leftMargin: -15
+                        source: "assets/svg/humidity.svg"
+                        width: 32
+                        height: width
+                        fillMode: Image.PreserveAspectFit
+                    }
                 }
 
                 Meter {
-                    anchors.top: humidityIcon.bottom
-                    width: parent.width
-                    height: width
+                    anchors.top: humidityItem.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: parent.height
                     fontName: mainFontLight.name
                     primaryTextSize: 70
                     primaryText: initialized && RoomService.humidity ? RoomService.humidity.real : primaryText
-                    secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) + "%" : secondaryText
+                    secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
                 }
             }
 
+            // weather forecast
             Item {
-                width: 85
-                height: width
-
-                Rectangle {
-                    anchors.fill: parent
-                    color: "red"
-                }
+                width: 160
+                height: parent.height
 
                 Image {
                     id: forecastIcon
+                    anchors.horizontalCenter: parent.horizontalCenter
                     source: "assets/svg/sun.svg"
                     width: 64
+                    height: width
                     fillMode: Image.PreserveAspectFit
                 }
 
                 Meter {
                     anchors.top: forecastIcon.bottom
-                    width: parent.width
-                    height: width
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: parent.height
                     fontName: mainFontLight.name
                     primaryTextSize: 70
-                    primaryText: initialized && RoomService.humidity ? RoomService.humidity.real : primaryText
-                    secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) + "%" : secondaryText
+                    primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
+                    secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
                 }
             }
         }
