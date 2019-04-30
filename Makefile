@@ -13,11 +13,11 @@ deploy: install
 	@ scp output/bin/jarvis $(JARVIS_DOMAIN):/home/pi
 	@ ssh ${JARVIS_DOMAIN} 'sudo systemctl start jarvis.service'
 
-config: clean
+config:
 	@ mkdir -p bin
 	@ cd bin && cmake ${CMAKE_OPTIONS} ../
 
-config-rpi: clean
+config-rpi:
 	@ mkdir -p bin
 	@ cd bin && cmake ${CMAKE_OPTIONS} -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake ../
 
