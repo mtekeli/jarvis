@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
 
 project(jarvis LANGUAGES CXX)
-set (jarvis_VERSION_MAJOR 1)
-set (jarvis_VERSION_MINOR 2)
+set(jarvis_VERSION_MAJOR 1)
+set(jarvis_VERSION_MINOR 3)
+set(jarvis_DEVICE_IP "$ENV{JARVIS_HOST}")
+set(jarvis_IPDATA_API_KEY "$ENV{IPDATA_API_KEY}")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/output")
@@ -42,8 +44,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
-  "${PROJECT_SOURCE_DIR}/jarvis_config.cmake"
-  "${PROJECT_BINARY_DIR}/jarvis_config.h"
+  "${PROJECT_SOURCE_DIR}/jarvis-config.cmake"
+  "${PROJECT_BINARY_DIR}/jarvisconfig.hpp"
  )
 
 # add the binary tree to the search path for include files

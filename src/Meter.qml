@@ -17,7 +17,7 @@ Item {
             id: txtPrimary
 
             text: root.primaryText
-            color: "#ffffff"
+            color: "white"
             font.family: root.fontName
             font.pointSize: root.primaryTextSize
         }
@@ -28,7 +28,7 @@ Item {
             anchors.bottom: txtPrimary.bottom
             anchors.bottomMargin: 10
             text: "." + root.secondaryText
-            color: "#ffffff"
+            color: "white"
             font.family: root.fontName
             font.pointSize: root.secondaryTextSize
         }

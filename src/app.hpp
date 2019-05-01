@@ -1,10 +1,12 @@
 #ifndef APP_H
 #define APP_H
 
+#include "jarvisconfig.hpp"
+#include "libjarvis/locationservice.hpp"
+#include "libjarvis/roomservice.hpp"
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-
-#include "libjarvis/roomservice.hpp"
 
 class App : public QGuiApplication
 {
@@ -20,7 +22,10 @@ public:
 private:
     QQmlApplicationEngine engine = {this};
     QString _version;
-    RoomService _rs{QStringLiteral("http://192.168.1.77:8080"), 1000};
+    RoomService _rs{QStringLiteral("http://%1:8080").arg(JARVIS_DEVICE_IP),
+                    1000};
+    LocationService _ls{QStringLiteral("https://api.ipdata.co/?api-key=%1")
+                            .arg(IPDATA_API_KEY)};
 };
 
 #endif // APP_H

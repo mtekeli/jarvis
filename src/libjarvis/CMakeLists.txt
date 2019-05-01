@@ -3,6 +3,9 @@
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_library(libjarvis
+    "locationinfo.hpp"
+    "locationservice.hpp"
+    "locationservice.cpp"
     "roomservice.hpp"
     "roomservice.cpp"
     "measurement.hpp"

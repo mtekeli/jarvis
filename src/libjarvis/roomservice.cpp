@@ -80,7 +80,7 @@ void RoomService::processReply(QNetworkReply* reply)
 
     if (result.isEmpty())
     {
-        qDebug() << QStringLiteral("no data received");
+        qDebug() << QStringLiteral("no data received from room service");
         return;
     }
 
