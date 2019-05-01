@@ -3,6 +3,5 @@
         <file>MainWindow.qml</file>
         <file>DGauge.qml</file>
         <file>Meter.qml</file>
-        <file>SpacerSmall.qml</file>
     </qresource>
 </RCC>
