@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.1)
 
 project(jarvis LANGUAGES CXX)
-set (jarvis_VERSION_MAJOR 1)
-set (jarvis_VERSION_MINOR 2)
+set(jarvis_VERSION_MAJOR 1)
+set(jarvis_VERSION_MINOR 3)
+set(jarvis_IPDATA_API_KEY "$ENV{IPDATA_API_KEY}")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/output")

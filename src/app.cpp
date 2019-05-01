@@ -1,5 +1,4 @@
 #include "app.hpp"
-#include "jarvis_config.h"
 #include "libjarvis/measurement.hpp"
 
 #include <QQmlContext>
@@ -26,6 +25,8 @@ App::App(int argc, char* argv[])
     engine.addImportPath("qrc:/");
     engine.rootContext()->setContextProperty(QStringLiteral("RoomService"),
                                              &_rs);
+    engine.rootContext()->setContextProperty(QStringLiteral("LocationService"),
+                                             &_ls);
     engine.rootContext()->setContextProperty(QStringLiteral("App"), this);
     engine.load(QUrl{QStringLiteral("qrc:/MainWindow.qml")});
 }
