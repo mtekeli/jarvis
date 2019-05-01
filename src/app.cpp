@@ -27,7 +27,7 @@ App::App(int argc, char* argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("RoomService"),
                                              &_rs);
     engine.rootContext()->setContextProperty(QStringLiteral("App"), this);
-    engine.load(QUrl{QStringLiteral("qrc:/main.qml")});
+    engine.load(QUrl{QStringLiteral("qrc:/MainWindow.qml")});
 }
 
 App::~App() { qDebug() << "App is closing"; }
