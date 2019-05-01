@@ -30,4 +30,4 @@ App::App(int argc, char* argv[])
     engine.load(QUrl{QStringLiteral("qrc:/MainWindow.qml")});
 }
 
-App::~App() { qDebug() << "App is closing"; }
+App::~App() { qDebug() << QStringLiteral("App is closing"); }

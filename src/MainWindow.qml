@@ -6,7 +6,7 @@ Window {
     property bool initialized: false
     visible: true
     title: qsTr("Jarvis")
-    color: "#000000"
+    color: "black"
     width: 800
     height: 480
 
@@ -46,7 +46,7 @@ Window {
             anchors.top: parent.top
             anchors.topMargin: -20
             font.pointSize: 90
-            color: "#FFFFFF"
+            color: "white"
             font.family: mainFontRegular.name
             text: "-- --"
         }
@@ -60,7 +60,7 @@ Window {
             anchors.horizontalCenter: timeView.horizontalCenter
             height: contentHeight
             font.pointSize: 35
-            color: "#FFFFFF"
+            color: "white"
             font.family: mainFontLight.name
         }
 
@@ -70,7 +70,7 @@ Window {
             anchors.topMargin: 7
             anchors.horizontalCenter: dateView.horizontalCenter
             width: locationIcon.width + city.width
-            visible: dateView.contentWidth > 0
+            visible: dateView.contentWidth > 0 && LocationService.city !== "" && LocationService.country !== ""
 
             Image {
                 id: locationIcon
@@ -89,9 +89,9 @@ Window {
                 anchors.bottom: locationIcon.bottom
                 anchors.bottomMargin: -5
                 verticalAlignment: Text.AlignBottom
-                text: qsTr("Ankara, Turkey \ud83c\uddf9\ud83c\uddf7") // TODO
+                text: LocationService.city + ", " + LocationService.country
                 color: "white"
-                font.family: mainFontRegular.name
+                font.family: mainFontLight.name
                 font.pointSize: 14
             }
         }
@@ -141,7 +141,7 @@ Window {
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             text: App.version
-            color: "#FFFFFF"
+            color: "white"
         }
     }
 }

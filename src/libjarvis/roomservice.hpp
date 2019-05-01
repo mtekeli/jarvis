@@ -26,9 +26,17 @@ public:
     QString apiAddr() const { return _address; }
     int interval() const { return _interval; }
 
+public slots:
+    void start();
+    void stop();
+    void restart();
+
 signals:
     void temperatureChanged(QPrivateSignal);
     void humidityChanged(QPrivateSignal);
+
+private slots:
+    void getMeasurements();
 
 private:
     Measurement* _temp = nullptr;
@@ -43,13 +51,5 @@ private:
     void processReply(QNetworkReply* reply);
     void setApiAddr(const QString& addr);
     void setInterval(int interval);
-
-private slots:
-    void getMeasurements();
-
-public slots:
-    void start();
-    void stop();
-    void restart();
 };
 #endif // ROOMSERVICE_H
