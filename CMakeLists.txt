@@ -43,8 +43,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
-  "${PROJECT_SOURCE_DIR}/jarvis_config.cmake"
-  "${PROJECT_BINARY_DIR}/jarvis_config.h"
+  "${PROJECT_SOURCE_DIR}/jarvis-config.cmake"
+  "${PROJECT_BINARY_DIR}/jarvisconfig.hpp"
  )
 
 # add the binary tree to the search path for include files

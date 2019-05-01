@@ -1,7 +1,7 @@
 #ifndef APP_H
 #define APP_H
 
-#include "jarvis_config.h"
+#include "jarvisconfig.hpp"
 #include "libjarvis/locationservice.hpp"
 #include "libjarvis/roomservice.hpp"
 
