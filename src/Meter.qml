@@ -1,32 +1,36 @@
 import QtQuick 2.0
 
 Item {
+    id: root
 
     property string primaryText : "0"
     property string secondaryText: "0"
     property int primaryTextSize: 56
-    property int secondaryTextSize: 36
+    property int secondaryTextSize: 32
     property string fontName
 
-    Text {
-        id: txtPrimary
+    width: txtPrimary.contentWidth + txtSecondary.contentWidth
 
-        text: primaryText
-        color: "#ffffff"
-        font.family: fontName
-        font.pointSize: primaryTextSize
-    }
+    Row {
 
-    Text {
-        id: txtSecondary
+        Text {
+            id: txtPrimary
 
-        anchors.left: txtPrimary.right
-        anchors.bottom: txtPrimary.bottom
-        anchors.bottomMargin: 5
+            text: root.primaryText
+            color: "#ffffff"
+            font.family: root.fontName
+            font.pointSize: root.primaryTextSize
+        }
 
-        text: "." + secondaryText
-        color: "#ffffff"
-        font.family: fontName
-        font.pointSize: secondaryTextSize
+        Text {
+            id: txtSecondary
+
+            anchors.bottom: txtPrimary.bottom
+            anchors.bottomMargin: 10
+            text: "." + root.secondaryText
+            color: "#ffffff"
+            font.family: root.fontName
+            font.pointSize: root.secondaryTextSize
+        }
     }
 }
