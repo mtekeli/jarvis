@@ -35,13 +35,17 @@ Window {
 
     // date and time
     Item {
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height / 3
 
         // current time
         Text {
             id: timeView
-            font.pointSize: 90
+
             anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: -20
+            font.pointSize: 90
             color: "#FFFFFF"
             font.family: mainFontRegular.name
             text: "-- --"
@@ -50,12 +54,46 @@ Window {
         // current date
         Text {
             id: dateView
-            font.pointSize: 35
+
             anchors.top: timeView.bottom
             anchors.topMargin: -10
             anchors.horizontalCenter: timeView.horizontalCenter
+            height: contentHeight
+            font.pointSize: 35
             color: "#FFFFFF"
             font.family: mainFontLight.name
+        }
+
+        // location
+        Item {
+            anchors.top: dateView.bottom
+            anchors.topMargin: 7
+            anchors.horizontalCenter: dateView.horizontalCenter
+            width: locationIcon.width + city.width
+            visible: dateView.contentWidth > 0
+
+            Image {
+                id: locationIcon
+
+                source: "assets/svg/placeholder.svg"
+                width: 14
+                height: width
+                fillMode: Image.PreserveAspectFit
+            }
+
+            Text {
+                id: city
+
+                anchors.left: locationIcon.right
+                anchors.leftMargin: 4
+                anchors.bottom: locationIcon.bottom
+                anchors.bottomMargin: -5
+                verticalAlignment: Text.AlignBottom
+                text: qsTr("Ankara, Turkey \ud83c\uddf9\ud83c\uddf7") // TODO
+                color: "white"
+                font.family: mainFontRegular.name
+                font.pointSize: 14
+            }
         }
     }
 

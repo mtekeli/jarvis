@@ -14,5 +14,6 @@
         <file>assets/svg/humidity-color.svg</file>
         <file>assets/svg/humidity.svg</file>
         <file>assets/svg/sun.svg</file>
+        <file>assets/svg/placeholder.svg</file>
     </qresource>
 </RCC>
