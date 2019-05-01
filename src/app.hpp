@@ -22,7 +22,8 @@ public:
 private:
     QQmlApplicationEngine engine = {this};
     QString _version;
-    RoomService _rs{QStringLiteral("http://192.168.1.77:8080"), 1000};
+    RoomService _rs{QStringLiteral("http://%1:8080").arg(JARVIS_DEVICE_IP),
+                    1000};
     LocationService _ls{QStringLiteral("https://api.ipdata.co/?api-key=%1")
                             .arg(IPDATA_API_KEY)};
 };
