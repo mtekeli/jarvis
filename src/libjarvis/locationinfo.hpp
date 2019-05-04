@@ -12,4 +12,4 @@ struct LocationInfo
     QString timezone;
 };
 
-#endif
+#endif // LOCATIONINFO_H

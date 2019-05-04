@@ -140,7 +140,7 @@ Window {
         Text {
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
-            text: App.version
+            text: App.name + " v" + App.majorVersion + "." + App.minorVersion
             color: "white"
         }
     }

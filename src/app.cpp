@@ -3,14 +3,15 @@
 
 #include <QQmlContext>
 
-App::App(int argc, char* argv[])
-    : QGuiApplication(argc, argv), _version{QStringLiteral("Jarvis v%1.%2")
-                                                .arg(JARVIS_VERSION_MAJOR)
-                                                .arg(JARVIS_VERSION_MINOR)}
+App::App(int argc, char* argv[]) : QGuiApplication(argc, argv)
 {
+    QCoreApplication::setOrganizationName(QStringLiteral("mtekeli"));
+    QCoreApplication::setOrganizationDomain(QStringLiteral("mtekeli.io"));
+    QCoreApplication::setApplicationName(QStringLiteral("jarvis"));
+    QCoreApplication::setApplicationVersion(QStringLiteral("%1.%2")
+                                                .arg(JARVIS_VERSION_MAJOR)
+                                                .arg(JARVIS_VERSION_MINOR));
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
-    qInfo() << _version;
 
     // qmlRegisterUncreatableType<Measurement>("com.mtekeli.mirror", 1, 0,
     // "Measurement", "Cannot init from QML");

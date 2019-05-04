@@ -1,16 +1,20 @@
 add_executable(${PROJECT_NAME}
+    "main.cpp"
     "app.cpp"
     "app.hpp"
-    "main.cpp"
+    "appsettings.hpp"
+    "appsettings.cpp"
 )
 
 target_sources(${PROJECT_NAME}
     PRIVATE
-        "app.cpp"
-        "app.hpp"
         "main.cpp"
         "qml.qrc"
         "assets.qrc"
+        "app.cpp"
+        "app.hpp"
+        "appsettings.cpp"
+        "appsettings.hpp"
 )
 
 include_directories ("${PROJECT_SOURCE_DIR}/libjarvis")
