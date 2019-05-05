@@ -113,6 +113,12 @@ void RoomService::processReply(QNetworkReply* reply)
     {
         qDebug() << QStringLiteral("exception occured during parse:")
                  << e.what();
+
+        if (temperature)
+            temperature->deleteLater();
+        if (humidity)
+            humidity->deleteLater();
+
         return;
     }
 
