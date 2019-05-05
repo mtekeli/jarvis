@@ -106,7 +106,7 @@ void RoomService::processReply(QNetworkReply* reply)
             humidity = roomInfo.second;
         }
 
-        if (temperature || humidity)
+        if (!temperature || !humidity)
             throw std::invalid_argument("no room information available");
     }
     catch (std::exception& e)
