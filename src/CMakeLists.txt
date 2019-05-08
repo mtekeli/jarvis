@@ -23,7 +23,7 @@ add_subdirectory(tests)
 #add_subdirectory(resources)
 #add_subdirectory(view)
 
-set (EXTRA_LIBS ${EXTRA_LIBS} Qt5::Core Qt5::Quick)
+set (EXTRA_LIBS ${EXTRA_LIBS} Qt5::Core Qt5::Quick Qt5::Svg)
 set (EXTRA_LIBS ${EXTRA_LIBS} libjarvis)
 #set (EXTRA_LIBS ${EXTRA_LIBS} view)
 

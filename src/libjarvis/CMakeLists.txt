@@ -14,6 +14,6 @@ add_library(libjarvis
 
 find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 
-target_link_libraries(libjarvis PUBLIC Qt5::Core Qt5::Quick)
+target_link_libraries(libjarvis PUBLIC Qt5::Core Qt5::Quick Qt5::Svg)
 
 install (TARGETS libjarvis DESTINATION bin)
