@@ -35,6 +35,7 @@ docker:
 		--env BUILD_NAME=linux-armhf-rpi \
 		--env JARVIS_HOST=${JARVIS_HOST} \
 		--env JARVIS_DOMAIN=${JARVIS_DOMAIN} \
+		--env IPDATA_API_KEY=$(IPDATA_API_KEY) \
 		mustafatekeli/jarvis-cross-compile
 
 fmt: config
