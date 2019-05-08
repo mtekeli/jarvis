@@ -19,6 +19,7 @@ private:
     QSettings* _settings;
     QString _roomServiceUrl;
     int _roomServiceInterval;
+    bool _useIpLocation;
 
     void resetToDefaults();
     void read();
