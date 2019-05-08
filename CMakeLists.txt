@@ -52,7 +52,7 @@ configure_file (
 # so that we will find config file
 include_directories("${PROJECT_BINARY_DIR}")
 
-find_package(Qt5 COMPONENTS Core Quick REQUIRED)
+find_package(Qt5 COMPONENTS Core Quick Svg REQUIRED)
 
 add_subdirectory(src)
 

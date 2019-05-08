@@ -9,9 +9,8 @@ install: build
 	@ cd bin && make install
 
 deploy: install
-	@ ssh ${JARVIS_DOMAIN} 'sudo systemctl stop jarvis.service'
-	@ scp output/bin/jarvis $(JARVIS_DOMAIN):/home/pi
-	@ ssh ${JARVIS_DOMAIN} 'sudo systemctl start jarvis.service'
+	@ scp output/bin/jarvis $(JARVIS_DOMAIN):/tmp
+	@ ssh ${JARVIS_DOMAIN} 'sh /home/pi/update.sh'
 
 config:
 	@ mkdir -p bin
@@ -35,6 +34,7 @@ docker:
 		--env BUILD_NAME=linux-armhf-rpi \
 		--env JARVIS_HOST=${JARVIS_HOST} \
 		--env JARVIS_DOMAIN=${JARVIS_DOMAIN} \
+		--env IPDATA_API_KEY=$(IPDATA_API_KEY) \
 		mustafatekeli/jarvis-cross-compile
 
 fmt: config

@@ -27,7 +27,8 @@ RUN echo ${QT_MODULES} && mkdir ${QT_MODULES} \
 	&& git clone git://code.qt.io/qt/qtdeclarative.git -b ${QT_VERSION} \
 	&& git clone git://code.qt.io/qt/qtquickcontrols.git -b ${QT_VERSION} \
 	&& git clone git://code.qt.io/qt/qtquickcontrols2.git -b ${QT_VERSION} \
-	&& git clone git://code.qt.io/qt/qtmultimedia.git -b ${QT_VERSION}
+	&& git clone git://code.qt.io/qt/qtmultimedia.git -b ${QT_VERSION} \
+	&& git clone git://code.qt.io/qt/qtsvg.git -b ${QT_VERSION}
 
 RUN cd ${QT_MODULES}/qtdeclarative \
 	&& ${HOST_BINS}/bin/qmake \
@@ -45,6 +46,11 @@ RUN cd ${QT_MODULES}/qtquickcontrols2 \
 	&& make install
 
 RUN cd ${QT_MODULES}/qtmultimedia \
+	&& ${HOST_BINS}/bin/qmake \
+	&& make -j4 \
+	&& make install 
+
+RUN cd ${QT_MODULES}/qtsvg \
 	&& ${HOST_BINS}/bin/qmake \
 	&& make -j4 \
 	&& make install 

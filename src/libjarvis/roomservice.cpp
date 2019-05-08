@@ -106,13 +106,19 @@ void RoomService::processReply(QNetworkReply* reply)
             humidity = roomInfo.second;
         }
 
-        if (temperature || humidity)
+        if (!temperature || !humidity)
             throw std::invalid_argument("no room information available");
     }
     catch (std::exception& e)
     {
         qDebug() << QStringLiteral("exception occured during parse:")
                  << e.what();
+
+        if (temperature)
+            temperature->deleteLater();
+        if (humidity)
+            humidity->deleteLater();
+
         return;
     }
 

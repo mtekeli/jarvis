@@ -45,7 +45,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: -20
-            font.pointSize: 90
+            font.pointSize: 75
             color: "white"
             font.family: mainFontRegular.name
             text: "-- --"
@@ -92,7 +92,7 @@ Window {
                 text: LocationService.city + ", " + LocationService.country
                 color: "white"
                 font.family: mainFontLight.name
-                font.pointSize: 14
+                font.pointSize: 18
             }
         }
     }
@@ -111,7 +111,7 @@ Window {
             // thermometer
             DGauge {
                 imageSource: "assets/svg/thermometer.svg"
-                primaryTextSize: 70
+                primaryTextSize: 60
                 fontName: mainFontLight.name
                 primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
                 secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
@@ -120,7 +120,7 @@ Window {
             // humidity
             DGauge {
                 imageSource: "assets/svg/humidity.svg"
-                primaryTextSize: 70
+                primaryTextSize: 60
                 fontName: mainFontLight.name
                 primaryText: initialized && RoomService.humidity ? RoomService.humidity.real : primaryText
                 secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
@@ -129,7 +129,7 @@ Window {
             // forecast (TODO)
             DGauge {
                 imageSource: "assets/svg/sun.svg"
-                primaryTextSize: 70
+                primaryTextSize: 60
                 fontName: mainFontLight.name
                 primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
                 secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
@@ -140,7 +140,7 @@ Window {
         Text {
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
-            text: App.version
+            text: App.name + " v" + App.majorVersion + "." + App.minorVersion
             color: "white"
         }
     }
