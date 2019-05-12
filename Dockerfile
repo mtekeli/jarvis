@@ -17,7 +17,6 @@ RUN apt-get update && \
 	git \
 	cmake \
 	python \
-	rsync \
 	wget \ 
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
