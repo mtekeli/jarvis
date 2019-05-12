@@ -1,4 +1,4 @@
-FROM mustafatekeli/qtbuilder:amd64-rpi-cross-compile-base-5.12.3
+FROM mustafatekeli/qtbuilder:amd64-rpi-cross-compile-base-5.12.3-1
 
 ARG JARVIS_HOST
 ARG QT_VERSION=5.12.3
@@ -17,7 +17,6 @@ RUN apt-get update && \
 	git \
 	cmake \
 	python \
-	rsync \
 	wget \ 
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*

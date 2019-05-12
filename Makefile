@@ -9,7 +9,7 @@ install: build
 	@ cd bin && make install
 
 deploy: install
-	@ scp output/bin/jarvis $(JARVIS_DOMAIN):/tmp
+	@ scp output/bin/jarvis ${JARVIS_DOMAIN}:/tmp
 	@ ssh ${JARVIS_DOMAIN} 'sh /home/pi/update.sh'
 
 config:

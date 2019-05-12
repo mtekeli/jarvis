@@ -32,11 +32,9 @@ public:
 
 private:
     QQmlApplicationEngine engine = {this};
-    AppSettings settings{QGuiApplication::organizationName(),
-                         QGuiApplication::applicationName()};
-    RoomService _rs{settings.roomServiceUrl(), settings.roomServiceInterval()};
-    LocationService _ls{QStringLiteral("https://api.ipdata.co/?api-key=%1")
-                            .arg(IPDATA_API_KEY)};
+    AppSettings* _settings;
+    RoomService* _rs;
+    LocationService* _ls;
 };
 
 #endif // APP_H
