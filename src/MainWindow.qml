@@ -99,22 +99,140 @@ Window {
 
     // footer
     Item {
+        id: mainFooter
+
+        anchors.bottom: parent.bottom
         width: parent.width
         height: 240
-        anchors.bottom: parent.bottom
+
+
+        Timer {
+            id: switchTimer
+
+            property int counter: 1
+
+            interval: 5000
+            running: initialized
+            repeat: true
+            onTriggered: {
+                if (counter == 3)
+                    counter = 1
+                else
+                    counter ++
+            }
+        }
+
+        states: [
+            State {
+                name: "firstState"
+                when: switchTimer.counter === 1 && initialized
+                PropertyChanges {
+                    target: firstFooter
+                    visible: true
+                    height: parent.height
+                }
+            },
+            State {
+                name: "secondState"
+                when: switchTimer.counter === 2
+                PropertyChanges {
+                    target: secondFooter
+                    visible: true
+                    height: parent.height
+                }
+            },
+            State {
+                name: "thirdState"
+                when: switchTimer.counter === 3
+                PropertyChanges {
+                    target: thirdFooter
+                    visible: true
+                    height: parent.height
+                }
+            }
+        ]
+
+        Item {
+            id: secondFooter
+
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: - parent.height
+            visible: false
+
+            Rectangle {
+                anchors.fill: parent
+                color: "red"
+            }
+
+            Text {
+                anchors.fill: parent
+                text: "TEST"
+                color: "white"
+                font.family: mainFontRegular.name
+                font.pointSize: 60
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            Behavior on height {
+                NumberAnimation {
+                    duration: 500
+                    easing.type: Easing.OutSine
+                }
+            }
+        }
+
+        Item {
+            id: thirdFooter
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: - parent.height
+            visible: false
+
+            Rectangle {
+                anchors.fill: parent
+                color: "blue"
+            }
+
+            Text {
+                anchors.fill: parent
+                text: "TEST"
+                color: "white"
+                font.family: mainFontRegular.name
+                font.pointSize: 60
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            Behavior on height {
+                NumberAnimation {
+                    duration: 500
+                    easing.type: Easing.OutSine
+                }
+            }
+        }
 
         Row {
+            id: firstFooter
+
             anchors.horizontalCenter: parent.horizontalCenter
-            height: parent.height
+            anchors.bottom: parent.bottom
+            height: - parent.height
             spacing: 60
+            visible: false
 
             // thermometer
             DGauge {
                 imageSource: "assets/svg/thermometer.svg"
                 primaryTextSize: 60
                 fontName: mainFontLight.name
-                primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
-                secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
+                primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
+                secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
             }
 
             // humidity
@@ -122,8 +240,8 @@ Window {
                 imageSource: "assets/svg/humidity.svg"
                 primaryTextSize: 60
                 fontName: mainFontLight.name
-                primaryText: initialized && RoomService.humidity ? RoomService.humidity.real : primaryText
-                secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
+                primaryText: RoomService.humidity ? RoomService.humidity.real : primaryText
+                secondaryText: RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
             }
 
             // forecast (TODO)
@@ -131,8 +249,15 @@ Window {
                 imageSource: "assets/svg/sun.svg"
                 primaryTextSize: 60
                 fontName: mainFontLight.name
-                primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
-                secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
+                primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
+                secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
+            }
+
+            Behavior on height {
+                NumberAnimation {
+                    duration: 500
+                    easing.type: Easing.OutSine
+                }
             }
         }
 
