@@ -128,7 +128,7 @@ Window {
                 when: switchTimer.counter === 1 && initialized
                 PropertyChanges {
                     target: firstFooter
-                    visible: true
+                    opacity: 1.0
                     height: parent.height
                 }
             },
@@ -137,7 +137,7 @@ Window {
                 when: switchTimer.counter === 2
                 PropertyChanges {
                     target: secondFooter
-                    visible: true
+                    opacity: 1.0
                     height: parent.height
                 }
             },
@@ -146,7 +146,7 @@ Window {
                 when: switchTimer.counter === 3
                 PropertyChanges {
                     target: thirdFooter
-                    visible: true
+                    opacity: 1.0
                     height: parent.height
                 }
             }
@@ -160,7 +160,7 @@ Window {
             anchors.bottom: parent.bottom
             width: parent.width
             height: - parent.height
-            visible: false
+            opacity: 0.0
 
             Rectangle {
                 anchors.fill: parent
@@ -183,6 +183,12 @@ Window {
                     easing.type: Easing.OutSine
                 }
             }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 500
+                }
+            }
         }
 
         Item {
@@ -192,7 +198,7 @@ Window {
             anchors.bottom: parent.bottom
             width: parent.width
             height: - parent.height
-            visible: false
+            opacity: 0.0
 
             Rectangle {
                 anchors.fill: parent
@@ -215,6 +221,12 @@ Window {
                     easing.type: Easing.OutSine
                 }
             }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 500
+                }
+            }
         }
 
         Row {
@@ -224,7 +236,7 @@ Window {
             anchors.bottom: parent.bottom
             height: - parent.height
             spacing: 60
-            visible: false
+            opacity: 0.0
 
             // thermometer
             DGauge {
@@ -257,6 +269,12 @@ Window {
                 NumberAnimation {
                     duration: 500
                     easing.type: Easing.OutSine
+                }
+            }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 500
                 }
             }
         }
