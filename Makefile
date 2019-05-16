@@ -3,22 +3,22 @@ ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 .PHONY: build, config, config-rpi build, fmt, install, deploy, docker, qtc, clean
 
 build:
-	@ cd bin && make
+	@ cd ${BUILD_NAME} && make
 
 install: build
-	@ cd bin && make install
+	@ cd ${BUILD_NAME} && make install
 
 deploy: install
-	@ scp output/bin/jarvis ${JARVIS_DOMAIN}:/tmp
+	@ scp ${BUILD_NAME}/output/bin/jarvis ${JARVIS_DOMAIN}:/tmp
 	@ ssh ${JARVIS_DOMAIN} 'sh /home/pi/update.sh'
 
 config:
-	@ mkdir -p bin
-	@ cd bin && cmake ${CMAKE_OPTIONS} ../
+	@ mkdir -p ${BUILD_NAME}
+	@ cd ${BUILD_NAME} && cmake ${CMAKE_OPTIONS} ../
 
 config-rpi:
-	@ mkdir -p bin
-	@ cd bin && cmake ${CMAKE_OPTIONS} -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake ../
+	@ mkdir -p ${BUILD_NAME}
+	@ cd ${BUILD_NAME} && cmake ${CMAKE_OPTIONS} -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake ../
 
 qtc:
 	@ qtcreator $(ROOT_DIR)/CMakeLists.txt
@@ -38,7 +38,7 @@ docker:
 		mustafatekeli/jarvis-cross-compile
 
 fmt: config
-	@ cd bin && make fmt
+	@ cd ${BUILD_NAME} && make fmt
 
 clean:
-	@ rm -rf ./bin && rm -rf ./output || true
+	@ rm -rf ./$${BUILD_NAME:?} || true

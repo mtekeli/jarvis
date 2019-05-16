@@ -7,7 +7,7 @@ set(jarvis_DEVICE_IP "$ENV{JARVIS_HOST}")
 set(jarvis_IPDATA_API_KEY "$ENV{IPDATA_API_KEY}")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/output")
+set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/$ENV{BUILD_NAME}/output")
 
 # Including custom cmake rules
 include(clang-tools.cmake)
