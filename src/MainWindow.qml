@@ -152,6 +152,80 @@ Window {
             }
         ]
 
+        transitions: [
+            Transition {
+                from: ""
+                to: "firstState"
+
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: firstFooter
+                        property: "opacity"
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: firstFooter
+                        property: "height"
+                        duration: 500
+                        easing.type: Easing.OutSine
+                    }
+                }
+            },
+            Transition {
+                from: "firstState"
+                to: "secondState"
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: firstFooter
+                        property: "opacity"
+                        duration: 400
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: secondFooter
+                        property: "height"
+                        duration: 500
+                        easing.type: Easing.OutSine
+                    }
+                }
+            },
+            Transition {
+                from: "secondState"
+                to: "thirdState"
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: secondFooter
+                        property: "opacity"
+                        duration: 400
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: thirdFooter
+                        property: "height"
+                        duration: 500
+                        easing.type: Easing.OutSine
+                    }
+                }
+            },
+            Transition {
+                from: "thirdState"
+                to: "firstState"
+                NumberAnimation {
+                    target: thirdFooter
+                    property: "opacity"
+                    duration: 400
+                    easing.type: Easing.InOutQuad
+                }
+                NumberAnimation {
+                    target: firstFooter
+                    property: "height"
+                    duration: 500
+                    easing.type: Easing.OutSine
+                }
+            }
+        ]
+
         Item {
             id: secondFooter
 
@@ -164,7 +238,7 @@ Window {
 
             Rectangle {
                 anchors.fill: parent
-                color: "red"
+                color: "green"
             }
 
             Text {
@@ -175,19 +249,6 @@ Window {
                 font.pointSize: 60
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-            }
-
-            Behavior on height {
-                NumberAnimation {
-                    duration: 500
-                    easing.type: Easing.OutSine
-                }
-            }
-
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 500
-                }
             }
         }
 
@@ -214,67 +275,50 @@ Window {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
-
-            Behavior on height {
-                NumberAnimation {
-                    duration: 500
-                    easing.type: Easing.OutSine
-                }
-            }
-
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 500
-                }
-            }
         }
 
-        Row {
+        Rectangle{
             id: firstFooter
 
-            anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
+            width: parent.width
             height: - parent.height
-            spacing: 60
-            opacity: 0.0
+            color: "red"
+            opacity: 0
 
-            // thermometer
-            DGauge {
-                imageSource: "assets/svg/thermometer.svg"
-                primaryTextSize: 60
-                fontName: mainFontLight.name
-                primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
-                secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
-            }
+            Row {
+                height: parent.height
+                anchors.horizontalCenter: parent.horizontalCenter
+                //anchors.bottom: parent.bottom
+                //height: - parent.height
+                spacing: 60
+                //opacity: 0.0
 
-            // humidity
-            DGauge {
-                imageSource: "assets/svg/humidity.svg"
-                primaryTextSize: 60
-                fontName: mainFontLight.name
-                primaryText: RoomService.humidity ? RoomService.humidity.real : primaryText
-                secondaryText: RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
-            }
-
-            // forecast (TODO)
-            DGauge {
-                imageSource: "assets/svg/sun.svg"
-                primaryTextSize: 60
-                fontName: mainFontLight.name
-                primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
-                secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
-            }
-
-            Behavior on height {
-                NumberAnimation {
-                    duration: 500
-                    easing.type: Easing.OutSine
+                // thermometer
+                DGauge {
+                    imageSource: "assets/svg/thermometer.svg"
+                    primaryTextSize: 60
+                    fontName: mainFontLight.name
+                    primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
+                    secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
                 }
-            }
 
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 500
+                // humidity
+                DGauge {
+                    imageSource: "assets/svg/humidity.svg"
+                    primaryTextSize: 60
+                    fontName: mainFontLight.name
+                    primaryText: RoomService.humidity ? RoomService.humidity.real : primaryText
+                    secondaryText: RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
+                }
+
+                // forecast (TODO)
+                DGauge {
+                    imageSource: "assets/svg/sun.svg"
+                    primaryTextSize: 60
+                    fontName: mainFontLight.name
+                    primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
+                    secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
                 }
             }
         }
