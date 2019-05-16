@@ -20,6 +20,7 @@ Item {
         width: 64
         height: width
         fillMode: Image.PreserveAspectFit
+        mipmap: true
     }
 
     Meter {

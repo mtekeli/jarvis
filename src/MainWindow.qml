@@ -79,6 +79,7 @@ Window {
                 width: 14
                 height: width
                 fillMode: Image.PreserveAspectFit
+                mipmap: true
             }
 
             Text {
