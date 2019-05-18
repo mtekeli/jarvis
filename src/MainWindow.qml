@@ -3,6 +3,8 @@ import QtQuick.Window 2.11
 //import com.mtekeli.mirror 1.0
 
 Window {
+    id: root
+
     property bool initialized: false
     visible: true
     title: qsTr("Jarvis")
@@ -16,12 +18,13 @@ Window {
     Component.onCompleted: {
         RoomService.start()
         initialized = true
+        footer.switchState()
     }
 
     Timer {
         interval: 1000
         repeat: true
-        running: initialized
+        running: root.initialized
         onTriggered: {
             var date = new Date()
             if (timeView.text.indexOf(":") > -1)
@@ -100,53 +103,57 @@ Window {
 
     // footer
     Item {
-        id: mainFooter
+        id: footer
 
         anchors.bottom: parent.bottom
         width: parent.width
         height: 240
 
+        readonly property string state1: "summary"
+        readonly property string state2: "forecast"
+        readonly property string state3: "currency"
+
+        function switchState() {
+            if (state === "" || state === state3)
+                footer.state = state1
+            else if (state === state1)
+                footer.state = state2
+            else if (state === state2)
+                footer.state = state3
+        }
 
         Timer {
             id: switchTimer
 
-            property int counter: 1
-
             interval: 5000
-            running: initialized
+            running: root.initialized
             repeat: true
-            onTriggered: {
-                if (counter == 3)
-                    counter = 1
-                else
-                    counter ++
-            }
+            onTriggered: footer.switchState()
         }
+
+        onStateChanged: console.info("state changed to " + state)
 
         states: [
             State {
-                name: "firstState"
-                when: switchTimer.counter === 1 && initialized
+                name: footer.state1
                 PropertyChanges {
-                    target: firstFooter
+                    target: summary
                     opacity: 1.0
                     height: parent.height
                 }
             },
             State {
-                name: "secondState"
-                when: switchTimer.counter === 2
+                name: footer.state2
                 PropertyChanges {
-                    target: secondFooter
+                    target: forecast
                     opacity: 1.0
                     height: parent.height
                 }
             },
             State {
-                name: "thirdState"
-                when: switchTimer.counter === 3
+                name: footer.state3
                 PropertyChanges {
-                    target: thirdFooter
+                    target: currency
                     opacity: 1.0
                     height: parent.height
                 }
@@ -156,17 +163,17 @@ Window {
         transitions: [
             Transition {
                 from: ""
-                to: "firstState"
+                to: footer.state1
 
                 ParallelAnimation {
                     NumberAnimation {
-                        target: firstFooter
+                        target: summary
                         property: "opacity"
-                        duration: 500
+                        duration: 1000
                         easing.type: Easing.InOutQuad
                     }
                     NumberAnimation {
-                        target: firstFooter
+                        target: summary
                         property: "height"
                         duration: 500
                         easing.type: Easing.OutSine
@@ -174,17 +181,24 @@ Window {
                 }
             },
             Transition {
-                from: "firstState"
-                to: "secondState"
+                from: footer.state1
+                to: footer.state2
+
                 ParallelAnimation {
                     NumberAnimation {
-                        target: firstFooter
+                        target: summary
                         property: "opacity"
-                        duration: 400
+                        duration: 500
                         easing.type: Easing.InOutQuad
                     }
                     NumberAnimation {
-                        target: secondFooter
+                        target: forecast
+                        property: "opacity"
+                        duration: 1000
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: forecast
                         property: "height"
                         duration: 500
                         easing.type: Easing.OutSine
@@ -192,17 +206,24 @@ Window {
                 }
             },
             Transition {
-                from: "secondState"
-                to: "thirdState"
+                from: footer.state2
+                to: footer.state3
+
                 ParallelAnimation {
                     NumberAnimation {
-                        target: secondFooter
+                        target: forecast
                         property: "opacity"
-                        duration: 400
+                        duration: 500
                         easing.type: Easing.InOutQuad
                     }
                     NumberAnimation {
-                        target: thirdFooter
+                        target: currency
+                        property: "opacity"
+                        duration: 1000
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: currency
                         property: "height"
                         duration: 500
                         easing.type: Easing.OutSine
@@ -210,37 +231,51 @@ Window {
                 }
             },
             Transition {
-                from: "thirdState"
-                to: "firstState"
-                NumberAnimation {
-                    target: thirdFooter
-                    property: "opacity"
-                    duration: 400
-                    easing.type: Easing.InOutQuad
-                }
-                NumberAnimation {
-                    target: firstFooter
-                    property: "height"
-                    duration: 500
-                    easing.type: Easing.OutSine
+                from: footer.state3
+                to: footer.state1
+
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: currency
+                        property: "opacity"
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: summary
+                        property: "opacity"
+                        duration: 1000
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: summary
+                        property: "height"
+                        duration: 500
+                        easing.type: Easing.OutSine
+                    }
                 }
             }
         ]
 
-        Item {
-            id: secondFooter
+        Summary {
+            id: summary
 
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            height: - parent.height
+            opacity: 0.0
+            spacing: 60
+            fontName: mainFontLight.name
+        }
+
+        Item {
+            id: forecast
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             width: parent.width
             height: - parent.height
             opacity: 0.0
-
-            Rectangle {
-                anchors.fill: parent
-                color: "green"
-            }
 
             Text {
                 anchors.fill: parent
@@ -254,18 +289,13 @@ Window {
         }
 
         Item {
-            id: thirdFooter
+            id: currency
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             width: parent.width
             height: - parent.height
             opacity: 0.0
-
-            Rectangle {
-                anchors.fill: parent
-                color: "blue"
-            }
 
             Text {
                 anchors.fill: parent
@@ -275,52 +305,6 @@ Window {
                 font.pointSize: 60
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-            }
-        }
-
-        Rectangle{
-            id: firstFooter
-
-            anchors.bottom: parent.bottom
-            width: parent.width
-            height: - parent.height
-            color: "red"
-            opacity: 0
-
-            Row {
-                height: parent.height
-                anchors.horizontalCenter: parent.horizontalCenter
-                //anchors.bottom: parent.bottom
-                //height: - parent.height
-                spacing: 60
-                //opacity: 0.0
-
-                // thermometer
-                DGauge {
-                    imageSource: "assets/svg/thermometer.svg"
-                    primaryTextSize: 60
-                    fontName: mainFontLight.name
-                    primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
-                    secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
-                }
-
-                // humidity
-                DGauge {
-                    imageSource: "assets/svg/humidity.svg"
-                    primaryTextSize: 60
-                    fontName: mainFontLight.name
-                    primaryText: RoomService.humidity ? RoomService.humidity.real : primaryText
-                    secondaryText: RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
-                }
-
-                // forecast (TODO)
-                DGauge {
-                    imageSource: "assets/svg/sun.svg"
-                    primaryTextSize: 60
-                    fontName: mainFontLight.name
-                    primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
-                    secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
-                }
             }
         }
 
