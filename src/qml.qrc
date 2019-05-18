@@ -3,5 +3,6 @@
         <file>MainWindow.qml</file>
         <file>DGauge.qml</file>
         <file>Meter.qml</file>
+        <file>Summary.qml</file>
     </qresource>
 </RCC>

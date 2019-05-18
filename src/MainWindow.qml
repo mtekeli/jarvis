@@ -3,6 +3,8 @@ import QtQuick.Window 2.11
 //import com.mtekeli.mirror 1.0
 
 Window {
+    id: root
+
     property bool initialized: false
     visible: true
     title: qsTr("Jarvis")
@@ -16,12 +18,13 @@ Window {
     Component.onCompleted: {
         RoomService.start()
         initialized = true
+        footer.switchState()
     }
 
     Timer {
         interval: 1000
         repeat: true
-        running: initialized
+        running: root.initialized
         onTriggered: {
             var date = new Date()
             if (timeView.text.indexOf(":") > -1)
@@ -79,6 +82,7 @@ Window {
                 width: 14
                 height: width
                 fillMode: Image.PreserveAspectFit
+                mipmap: true
             }
 
             Text {
@@ -99,40 +103,208 @@ Window {
 
     // footer
     Item {
+        id: footer
+
+        anchors.bottom: parent.bottom
         width: parent.width
         height: 240
-        anchors.bottom: parent.bottom
 
-        Row {
+        readonly property string state1: "summary"
+        readonly property string state2: "forecast"
+        readonly property string state3: "currency"
+
+        function switchState() {
+            if (state === "" || state === state3)
+                footer.state = state1
+            else if (state === state1)
+                footer.state = state2
+            else if (state === state2)
+                footer.state = state3
+        }
+
+        Timer {
+            id: switchTimer
+
+            interval: 5000
+            running: root.initialized
+            repeat: true
+            onTriggered: footer.switchState()
+        }
+
+        onStateChanged: console.info("state changed to " + state)
+
+        states: [
+            State {
+                name: footer.state1
+                PropertyChanges {
+                    target: summary
+                    opacity: 1.0
+                    height: parent.height
+                }
+            },
+            State {
+                name: footer.state2
+                PropertyChanges {
+                    target: forecast
+                    opacity: 1.0
+                    height: parent.height
+                }
+            },
+            State {
+                name: footer.state3
+                PropertyChanges {
+                    target: currency
+                    opacity: 1.0
+                    height: parent.height
+                }
+            }
+        ]
+
+        transitions: [
+            Transition {
+                from: ""
+                to: footer.state1
+
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: summary
+                        property: "opacity"
+                        duration: 1000
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: summary
+                        property: "height"
+                        duration: 500
+                        easing.type: Easing.OutSine
+                    }
+                }
+            },
+            Transition {
+                from: footer.state1
+                to: footer.state2
+
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: summary
+                        property: "opacity"
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: forecast
+                        property: "opacity"
+                        duration: 1000
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: forecast
+                        property: "height"
+                        duration: 500
+                        easing.type: Easing.OutSine
+                    }
+                }
+            },
+            Transition {
+                from: footer.state2
+                to: footer.state3
+
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: forecast
+                        property: "opacity"
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: currency
+                        property: "opacity"
+                        duration: 1000
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: currency
+                        property: "height"
+                        duration: 500
+                        easing.type: Easing.OutSine
+                    }
+                }
+            },
+            Transition {
+                from: footer.state3
+                to: footer.state1
+
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: currency
+                        property: "opacity"
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: summary
+                        property: "opacity"
+                        duration: 1000
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: summary
+                        property: "height"
+                        duration: 500
+                        easing.type: Easing.OutSine
+                    }
+                }
+            }
+        ]
+
+        Summary {
+            id: summary
+
             anchors.horizontalCenter: parent.horizontalCenter
-            height: parent.height
+            anchors.bottom: parent.bottom
+            height: - parent.height
+            opacity: 0.0
             spacing: 60
+            fontName: mainFontLight.name
+        }
 
-            // thermometer
-            DGauge {
-                imageSource: "assets/svg/thermometer.svg"
-                primaryTextSize: 60
-                fontName: mainFontLight.name
-                primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
-                secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
+        Item {
+            id: forecast
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: - parent.height
+            opacity: 0.0
+
+            Text {
+                anchors.fill: parent
+                text: "TEST"
+                color: "white"
+                font.family: mainFontRegular.name
+                font.pointSize: 60
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
+        }
 
-            // humidity
-            DGauge {
-                imageSource: "assets/svg/humidity.svg"
-                primaryTextSize: 60
-                fontName: mainFontLight.name
-                primaryText: initialized && RoomService.humidity ? RoomService.humidity.real : primaryText
-                secondaryText: initialized && RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
-            }
+        Item {
+            id: currency
 
-            // forecast (TODO)
-            DGauge {
-                imageSource: "assets/svg/sun.svg"
-                primaryTextSize: 60
-                fontName: mainFontLight.name
-                primaryText: initialized && RoomService.temperature ? RoomService.temperature.real : primaryText
-                secondaryText: initialized && RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: - parent.height
+            opacity: 0.0
+
+            Text {
+                anchors.fill: parent
+                text: "TEST"
+                color: "white"
+                font.family: mainFontRegular.name
+                font.pointSize: 60
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
         }
 

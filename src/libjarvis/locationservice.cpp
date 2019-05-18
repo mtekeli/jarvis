@@ -6,6 +6,12 @@
 #include <QNetworkReply>
 #include <QTimer>
 
+namespace
+{
+constexpr auto REQUEST_INTERVAL = 1000;
+constexpr auto BACKOFF_INTERVAL = 60 * 1000;
+} // namespace
+
 namespace helpers
 {
 LocationInfo parseLocationReply(const QByteArray& data)
@@ -32,18 +38,37 @@ LocationService::LocationService(const QString& apiUrl, QObject* parent)
     connect(&_net, &QNetworkAccessManager::finished, this,
             &LocationService::processReply);
 
-    scheduleRequest(1000);
+    scheduleRequest(REQUEST_INTERVAL);
 }
 
 void LocationService::processReply(QNetworkReply* reply)
 {
-    const auto result = reply->readAll();
     reply->deleteLater();
+
+    if (reply->error() != QNetworkReply::NoError)
+    {
+        qDebug() << QStringLiteral("error received from location service");
+        scheduleRequest(BACKOFF_INTERVAL);
+        return;
+    }
+
+    const auto code =
+        reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    if (code != 200)
+    {
+        qDebug() << QStringLiteral("response from location service returned ")
+                 << code;
+        scheduleRequest(BACKOFF_INTERVAL);
+        return;
+    }
+
+    const auto result = reply->readAll();
 
     if (result.isEmpty())
     {
         qDebug() << QStringLiteral("no data received from location service");
-        scheduleRequest(60000);
+        scheduleRequest(BACKOFF_INTERVAL);
         return;
     }
 
@@ -67,7 +92,7 @@ void LocationService::processReply(QNetworkReply* reply)
     {
         qDebug() << QStringLiteral("exception occured during location parse:")
                  << e.what();
-        scheduleRequest(60000);
+        scheduleRequest(BACKOFF_INTERVAL);
         return;
     }
 }
