@@ -31,3 +31,15 @@ void Measurement::setDecimals(const QString& value)
     _decimals = value;
     emit decimalsChanged({});
 }
+
+MeasurementInfo Measurement::parseMeasurement(const QString& value)
+{
+    if (!value.contains(QStringLiteral(".")))
+        return {};
+
+    const auto figures = value.split('.');
+    if (figures.length() != 2)
+        return {};
+
+    return {figures[0], figures[1]};
+}

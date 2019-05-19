@@ -24,6 +24,7 @@ LocationInfo parseLocationReply(const QByteArray& data)
     LocationInfo locInfo;
     locInfo.city = rootObject.value("city").toString();
     locInfo.country = rootObject.value("country_name").toString();
+    locInfo.countryCode = rootObject.value("country_code").toString().toLower();
     locInfo.flag = rootObject.value("emoji_flag").toString();
     locInfo.currency = currencyObject.value("code").toString();
     locInfo.timezone = timeZoneObject.value("name").toString();
@@ -47,7 +48,8 @@ void LocationService::processReply(QNetworkReply* reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        qDebug() << QStringLiteral("error received from location service");
+        qDebug() << QStringLiteral("error received from location service: ")
+                 << reply->error();
         scheduleRequest(BACKOFF_INTERVAL);
         return;
     }
@@ -72,13 +74,10 @@ void LocationService::processReply(QNetworkReply* reply)
         return;
     }
 
-    qDebug() << QStringLiteral("received data:") << result;
+    // qDebug() << QStringLiteral("received location data:") << result;
 
     try
     {
-        if (reply->error() != QNetworkReply::NoError)
-            throw std::invalid_argument(reply->errorString().toStdString());
-
         if (result.length() == 0)
             throw std::invalid_argument("no room information was returned");
 
@@ -86,6 +85,8 @@ void LocationService::processReply(QNetworkReply* reply)
             const auto locationInfo = helpers::parseLocationReply(result);
             setCity(locationInfo.city);
             setCountry(locationInfo.country);
+            setCountryCode(locationInfo.countryCode);
+            emit locationReceived({});
         }
     }
     catch (std::exception& e)
@@ -122,4 +123,13 @@ void LocationService::setCountry(const QString& country)
 
     _country = country;
     emit countryChanged({});
+}
+
+void LocationService::setCountryCode(const QString& countryCode)
+{
+    if (_countryCode == countryCode)
+        return;
+
+    _countryCode = countryCode;
+    emit countryCodeChanged({});
 }

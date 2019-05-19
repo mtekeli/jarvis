@@ -5,28 +5,14 @@
 
 namespace helpers
 {
-Measurement* parseMeasurement(const QString& value, QObject* parent)
-{
-    if (!value.contains(QStringLiteral(".")))
-        return nullptr;
-
-    const auto figures = value.split('.');
-    if (figures.length() != 2)
-        return nullptr;
-    ;
-
-    return new Measurement{figures[0], figures[1], parent};
-}
-
-QPair<Measurement*, Measurement*> parseRoomReply(const QByteArray& value,
-                                                 QObject* parent)
+QPair<MeasurementInfo, MeasurementInfo> parseRoomReply(const QByteArray& value)
 {
     const auto results = value.split(',');
     if (results.length() < 2)
         return {};
 
-    const auto m1 = parseMeasurement(results[0], parent);
-    const auto m2 = parseMeasurement(results[1], parent);
+    const auto m1 = Measurement::parseMeasurement(results[0]);
+    const auto m2 = Measurement::parseMeasurement(results[1]);
     return {m1, m2};
 }
 } // namespace helpers
@@ -85,8 +71,8 @@ void RoomService::processReply(QNetworkReply* reply)
     }
 
     qDebug() << QStringLiteral("received data:") << result;
-    Measurement* temperature;
-    Measurement* humidity;
+    Measurement* temperature = nullptr;
+    Measurement* humidity = nullptr;
 
     try
     {
@@ -101,25 +87,18 @@ void RoomService::processReply(QNetworkReply* reply)
         }
 
         {
-            const auto roomInfo = helpers::parseRoomReply(result, this);
-            temperature = roomInfo.first;
-            humidity = roomInfo.second;
-        }
+            const auto roomInfo = helpers::parseRoomReply(result);
 
-        if (!temperature || !humidity)
-            throw std::invalid_argument("no room information available");
+            temperature = new Measurement{roomInfo.first.real,
+                                          roomInfo.first.decimals, this};
+            humidity = new Measurement{roomInfo.second.real,
+                                       roomInfo.second.decimals, this};
+        }
     }
     catch (std::exception& e)
     {
         qDebug() << QStringLiteral("exception occured during parse:")
                  << e.what();
-
-        if (temperature)
-            temperature->deleteLater();
-        if (humidity)
-            humidity->deleteLater();
-
-        return;
     }
 
     setTemperature(temperature);

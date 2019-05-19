@@ -1,5 +1,8 @@
 #include "app.hpp"
+#include "libjarvis/locationservice.hpp"
 #include "libjarvis/measurement.hpp"
+#include "libjarvis/roomservice.hpp"
+#include "libjarvis/weatherservice.hpp"
 
 #include <QQmlContext>
 
@@ -21,7 +24,15 @@ App::App(int argc, char* argv[]) : QGuiApplication(argc, argv)
     // "RoomService", "Cannot init from QML");
     // qmlRegisterUncreatableType<Measurement*>("com.mtekeli.mirror", 1, 0,
     // "Measurement*", "Cannot init from QML");
+    //    qmlRegisterUncreatableType<WeatherService>(
+    //        "com.mtekeli.jarvis", 1, 0, "WeatherService", "Cannot init from
+    //        QML");
+    //    qmlRegisterUncreatableType<CurrentWeather>(
+    //        "com.mtekeli.jarvis", 1, 0, "CurrentWeather", "Cannot init from
+    //        QML");
     qRegisterMetaType<Measurement*>("Measurement");
+    qRegisterMetaType<WeatherService*>("WeatherService");
+    qRegisterMetaType<CurrentWeather*>("CurrentWeather");
 
     _settings = new AppSettings{QGuiApplication::organizationName(),
                                 QGuiApplication::applicationName(), this};
@@ -30,6 +41,31 @@ App::App(int argc, char* argv[]) : QGuiApplication(argc, argv)
     _ls = new LocationService{
         QStringLiteral("https://api.ipdata.co/?api-key=%1").arg(IPDATA_API_KEY),
         this};
+
+    if (_settings->useIpLocation())
+        connect(_ls, &LocationService::locationReceived, this, [this]() {
+            qDebug() << "location received. Starting weather service based on "
+                        "IP location. City:"
+                     << _ls->city() << " Country:" << _ls->countryCode();
+            _ws = new WeatherService{
+                QStringLiteral("http://api.openweathermap.org/data/2.5/"
+                               "weather?q=%1,%2&units=metric&appid=%3")
+                    .arg(_ls->city())
+                    .arg(_ls->countryCode())
+                    .arg(OPEN_WEATHER_API_KEY),
+                this};
+            emit weatherServiceChanged({});
+        });
+    else
+    {
+        _ws = new WeatherService{
+            QStringLiteral("http://api.openweathermap.org/data/2.5/"
+                           "weather?q=%1,%2&units=metric&appid=%3")
+                .arg(_settings->city())
+                .arg(_settings->countryCode())
+                .arg(OPEN_WEATHER_API_KEY),
+            this};
+    }
 
     engine.addImportPath("qrc:/");
     engine.rootContext()->setContextProperty(QStringLiteral("RoomService"),

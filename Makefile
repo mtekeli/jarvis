@@ -1,6 +1,6 @@
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-.PHONY: build, config, config-rpi build, fmt, install, deploy, docker, qtc, clean
+.PHONY: build, config, config-rpi, build, fmt, install, deploy, docker, qtc, clean
 
 build:
 	@ cd ${BUILD_NAME} && make
@@ -35,6 +35,7 @@ docker:
 		--env JARVIS_HOST=${JARVIS_HOST} \
 		--env JARVIS_DOMAIN=${JARVIS_DOMAIN} \
 		--env IPDATA_API_KEY=$(IPDATA_API_KEY) \
+		--env OPEN_WEATHER_API_KEY=$(OPEN_WEATHER_API_KEY) \
 		mustafatekeli/jarvis-cross-compile
 
 fmt: config

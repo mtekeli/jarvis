@@ -1,6 +1,9 @@
 import QtQuick 2.11
+import QtGraphicalEffects 1.12
 
 Item {
+    id: root
+
     property alias imageSource: icon.source
     property alias imageWidth: icon.width
     property alias imageHeight: icon.height
@@ -9,6 +12,9 @@ Item {
     property alias primaryTextSize: meter.primaryTextSize
     property alias secondaryTextSize: meter.secondaryTextSize
     property alias fontName: meter.fontName
+
+    property bool colorize: false
+    property string color: "blue"
 
     implicitWidth: 160
     implicitHeight: parent.height
@@ -21,6 +27,13 @@ Item {
         height: width
         fillMode: Image.PreserveAspectFit
         mipmap: true
+    }
+
+    ColorOverlay {
+        anchors.fill: icon
+        source: icon
+        color: root.color
+        visible: root.colorize
     }
 
     Meter {

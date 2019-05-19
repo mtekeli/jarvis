@@ -3,6 +3,12 @@
 
 #include <QObject>
 
+struct MeasurementInfo
+{
+    QString real;
+    QString decimals;
+};
+
 class Measurement : public QObject
 {
     Q_OBJECT
@@ -16,6 +22,8 @@ public:
     ~Measurement();
     void setReal(const QString& value);
     void setDecimals(const QString& value);
+
+    static MeasurementInfo parseMeasurement(const QString& value);
 
 signals:
     void realChanged(QPrivateSignal);
