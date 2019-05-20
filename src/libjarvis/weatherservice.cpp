@@ -8,7 +8,7 @@
 
 namespace
 {
-constexpr auto REQUEST_INTERVAL = 5 * 60 * 10000;
+constexpr auto REQUEST_INTERVAL = 5 * 60 * 1000;
 }
 
 namespace helpers
