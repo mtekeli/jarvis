@@ -19,10 +19,10 @@ QPair<MeasurementInfo, MeasurementInfo> parseRoomReply(const QByteArray& value)
 
 RoomService::RoomService(const QString& apiAddress, const int interval,
                          QObject* parent)
-    : QObject{parent}
+    : QObject{parent}, _address{apiAddress}, _interval{interval},
+      _apiTimer{this}, _net{this}
 {
-    setApiAddr(apiAddress);
-    setInterval(interval);
+    _apiTimer.setInterval(_interval);
 
     connect(&_net, &QNetworkAccessManager::finished, this,
             &RoomService::processReply);
@@ -61,8 +61,26 @@ void RoomService::setHumidity(Measurement* m)
 
 void RoomService::processReply(QNetworkReply* reply)
 {
-    const auto result = reply->readAll();
     reply->deleteLater();
+
+    if (reply->error() != QNetworkReply::NoError)
+    {
+        qDebug() << QStringLiteral("error received from room service: ")
+                 << reply->error();
+        return;
+    }
+
+    const auto code =
+        reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    if (code != 200)
+    {
+        qDebug() << QStringLiteral("response from room service returned ")
+                 << code;
+        return;
+    }
+
+    const auto result = reply->readAll();
 
     if (result.isEmpty())
     {
@@ -74,59 +92,19 @@ void RoomService::processReply(QNetworkReply* reply)
     Measurement* temperature = nullptr;
     Measurement* humidity = nullptr;
 
-    try
-    {
-        if (reply->error() != QNetworkReply::NoError)
-        {
-            throw std::invalid_argument(reply->errorString().toStdString());
-        }
+    const auto roomInfo = helpers::parseRoomReply(result);
 
-        if (result.length() == 0)
-        {
-            throw std::invalid_argument("no room information was returned");
-        }
-
-        {
-            const auto roomInfo = helpers::parseRoomReply(result);
-
-            temperature = new Measurement{roomInfo.first.real,
-                                          roomInfo.first.decimals, this};
-            humidity = new Measurement{roomInfo.second.real,
-                                       roomInfo.second.decimals, this};
-        }
-    }
-    catch (std::exception& e)
-    {
-        qDebug() << QStringLiteral("exception occured during parse:")
-                 << e.what();
-    }
+    temperature =
+        new Measurement{roomInfo.first.real, roomInfo.first.decimals, this};
+    humidity =
+        new Measurement{roomInfo.second.real, roomInfo.second.decimals, this};
 
     setTemperature(temperature);
     setHumidity(humidity);
 }
 
-void RoomService::setApiAddr(const QString& addr)
-{
-    if (_address == addr)
-        return;
-
-    _address = addr;
-}
-
-void RoomService::setInterval(int interval)
-{
-    if (_interval == interval)
-        return;
-
-    _interval = interval;
-    qDebug() << QStringLiteral("interval changed to ") << _interval;
-}
-
 void RoomService::getMeasurements()
 {
-    if (_address == "")
-        return;
-
     _net.get(QNetworkRequest{QUrl{_address}});
 }
 
@@ -134,13 +112,5 @@ void RoomService::start()
 {
     qDebug() << QStringLiteral("starting with interval of ") << _interval;
     getMeasurements();
-    _apiTimer.start(_interval);
-}
-
-void RoomService::stop() { _apiTimer.stop(); }
-
-void RoomService::restart()
-{
-    stop();
-    start();
+    _apiTimer.start();
 }

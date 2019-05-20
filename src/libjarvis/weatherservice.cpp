@@ -39,7 +39,7 @@ WeatherInfo parseWeatherData(const QByteArray& data)
 } // namespace helpers
 
 WeatherService::WeatherService(const QString& url, QObject* parent)
-    : QObject{parent}, _url{url}
+    : QObject{parent}, _url{url}, _net{this}, _timer{this}
 {
     connect(&_net, &QNetworkAccessManager::finished, this,
             &WeatherService::processReply);
@@ -103,20 +103,6 @@ void WeatherService::processReply(QNetworkReply* reply)
 
     qDebug() << QStringLiteral("received weather data:") << result;
 
-    try
-    {
-        if (result.length() == 0)
-            throw std::invalid_argument("no weather information was returned");
-
-        {
-            const auto weatherInfo = helpers::parseWeatherData(result);
-            setCurrentWeather(weatherInfo);
-        }
-    }
-    catch (std::exception& e)
-    {
-        qDebug() << QStringLiteral("exception occured during weather parse:")
-                 << e.what();
-        return;
-    }
+    const auto weatherInfo = helpers::parseWeatherData(result);
+    setCurrentWeather(weatherInfo);
 }

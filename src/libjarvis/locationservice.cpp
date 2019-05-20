@@ -34,7 +34,7 @@ LocationInfo parseLocationReply(const QByteArray& data)
 } // namespace helpers
 
 LocationService::LocationService(const QString& apiUrl, QObject* parent)
-    : QObject{parent}, _url{apiUrl}
+    : QObject{parent}, _url{apiUrl}, _net{this}
 {
     connect(&_net, &QNetworkAccessManager::finished, this,
             &LocationService::processReply);
@@ -76,26 +76,11 @@ void LocationService::processReply(QNetworkReply* reply)
 
     // qDebug() << QStringLiteral("received location data:") << result;
 
-    try
-    {
-        if (result.length() == 0)
-            throw std::invalid_argument("no room information was returned");
-
-        {
-            const auto locationInfo = helpers::parseLocationReply(result);
-            setCity(locationInfo.city);
-            setCountry(locationInfo.country);
-            setCountryCode(locationInfo.countryCode);
-            emit locationReceived({});
-        }
-    }
-    catch (std::exception& e)
-    {
-        qDebug() << QStringLiteral("exception occured during location parse:")
-                 << e.what();
-        scheduleRequest(BACKOFF_INTERVAL);
-        return;
-    }
+    const auto locationInfo = helpers::parseLocationReply(result);
+    setCity(locationInfo.city);
+    setCountry(locationInfo.country);
+    setCountryCode(locationInfo.countryCode);
+    emit locationReceived({});
 }
 
 void LocationService::scheduleRequest(const int duration)

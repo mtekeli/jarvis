@@ -22,10 +22,6 @@ public:
 signals:
     void currentWeatherChanged(QPrivateSignal);
 
-public slots:
-
-private slots:
-
 private:
     QString _url;
     QNetworkAccessManager _net;
