@@ -4,5 +4,7 @@
         <file>DGauge.qml</file>
         <file>Meter.qml</file>
         <file>Summary.qml</file>
+        <file>Forecast.qml</file>
+        <file>ImageWithOverlay.qml</file>
     </qresource>
 </RCC>

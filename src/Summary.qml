@@ -4,17 +4,21 @@ Row {
     id: root
 
     property string fontName
-
-    readonly property var weatherService: App.weatherService
-    readonly property var curentWeather: weatherService ? weatherService.currentWeather : null
+    property string currentWeatherIcon
+    property string roomTemperatureReal
+    property string roomTemperatureDecimals
+    property string roomHumidityReal
+    property string roomHumidityDecimals
+    property string weatherTemperatureReal
+    property string weatherTemperatureDecimals
 
     // thermometer
     DGauge {
         imageSource: "assets/svg/thermometer.svg"
         primaryTextSize: 60
         fontName: fontName
-        primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
-        secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
+        primaryText: roomTemperatureReal
+        secondaryText: roomTemperatureDecimals
     }
 
     // humidity
@@ -22,18 +26,18 @@ Row {
         imageSource: "assets/svg/humidity.svg"
         primaryTextSize: 60
         fontName: fontName
-        primaryText: RoomService.humidity ? RoomService.humidity.real : primaryText
-        secondaryText: RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
+        primaryText: roomHumidityReal
+        secondaryText: roomHumidityDecimals
     }
 
-    // forecast (TODO)
+    // currentWeather
     DGauge {
-        imageSource: curentWeather ? "assets/svg/weather/"+curentWeather.weather+".svg" : "assets/svg/sun.svg"
+        imageSource: root.currentWeatherIcon
         colorize: true
         color: "white"
         primaryTextSize: 60
         fontName: fontName
-        primaryText: curentWeather ? curentWeather.temperature.real: primaryText
-        secondaryText: curentWeather ? curentWeather.temperature.decimals.substring(0,1) + "°" : secondaryText
+        primaryText: weatherTemperatureReal
+        secondaryText: weatherTemperatureDecimals
     }
 }

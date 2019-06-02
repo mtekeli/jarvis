@@ -19,20 +19,26 @@ WeatherInfo parseWeatherData(const QByteArray& data)
     const auto rootObject = itemDoc.object();
     const auto mainObject = rootObject.value("main").toObject();
     const auto weatherArr = rootObject.value("weather").toArray();
+    const auto windObj = rootObject.value("wind").toObject();
+    const auto rainObj = rootObject.value("rain").toObject();
+
     QJsonObject weatherObject;
     if (weatherArr.count() > 0)
         weatherObject = weatherArr.at(0).toObject();
 
-    const auto city = rootObject.value("name").toString();
     const auto temp = mainObject.value("temp").toDouble();
-    const auto humidity = mainObject.value("humidity").toInt();
-    const auto weather = weatherObject.value("main").toString().toLower();
 
     WeatherInfo info;
-    info.temperature = temp;
-    info.humidity = humidity;
-    info.weather = weather;
-    info.city = city;
+    info.temperature = Measurement::parseMeasurement(QString::number(temp));
+    info.temp_min = static_cast<int>(mainObject.value("temp_min").toDouble());
+    info.temp_max = static_cast<int>(mainObject.value("temp_max").toDouble());
+    info.humidity = mainObject.value("humidity").toInt();
+    info.pressure = mainObject.value("pressure").toInt();
+    info.weather = weatherObject.value("main").toString().toLower();
+    info.city = rootObject.value("name").toString();
+    info.windSpeed = windObj.value("speed").toDouble();
+    info.windDegree = windObj.value("deg").toInt(-1);
+    info.rain = rainObj.value("value").toDouble();
 
     return info;
 }
@@ -77,11 +83,7 @@ void WeatherService::setCurrentWeather(const WeatherInfo& info)
     if (_currentWeather)
         _currentWeather->deleteLater();
 
-    const auto tempInfo =
-        Measurement::parseMeasurement(QString::number(info.temperature));
-
-    _currentWeather = new CurrentWeather{info.city, tempInfo, info.weather,
-                                         info.humidity, this};
+    _currentWeather = new CurrentWeather{info, this};
 
     emit currentWeatherChanged({});
 }

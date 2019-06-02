@@ -6,14 +6,25 @@ Window {
     id: root
 
     property bool initialized: false
+
+    readonly property var weatherService: App.weatherService
+    readonly property var currentWeather: weatherService ? weatherService.currentWeather : null
+    readonly property string currentWeatherIcon: currentWeather ? "assets/svg/weather/" + currentWeather.weather + ".svg" : "assets/svg/sun.svg"
+    readonly property string roomTemperatureReal: RoomService.temperature ? RoomService.temperature.real : "0"
+    readonly property string roomTemperatureDecimals: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : "0"
+    readonly property string roomHumidityReal: RoomService.humidity ? RoomService.humidity.real : "0"
+    readonly property string roomHumidityDecimals: RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : "0"
+    readonly property string weatherTemperatureReal: currentWeather ? currentWeather.temperature.real : "0"
+    readonly property string weatherTemperatureDecimals: currentWeather ? currentWeather.temperature.decimals.substring(0,1) + "°" : "0"
+
     visible: true
     title: qsTr("Jarvis")
     color: "black"
     width: 800
     height: 480
 
-    FontLoader { id: mainFontRegular; source: "qrc:/assets/fonts/ClearSans-Regular.ttf" }
-    FontLoader { id: mainFontLight; source: "qrc:/assets/fonts/ClearSans-Thin.ttf" }
+    FontLoader { id: mainFontRegular; source: "assets/fonts/ClearSans-Regular.ttf" }
+    FontLoader { id: mainFontLight; source: "assets/fonts/ClearSans-Thin.ttf" }
 
     Component.onCompleted: {
         RoomService.start()
@@ -119,7 +130,7 @@ Window {
             else if (state === state1)
                 footer.state = state2
             else if (state === state2)
-                footer.state = state3
+                footer.state = state1
         }
 
         Timer {
@@ -231,12 +242,12 @@ Window {
                 }
             },
             Transition {
-                from: footer.state3
+                from: footer.state2
                 to: footer.state1
 
                 ParallelAnimation {
                     NumberAnimation {
-                        target: currency
+                        target: forecast
                         property: "opacity"
                         duration: 500
                         easing.type: Easing.InOutQuad
@@ -266,29 +277,34 @@ Window {
             opacity: 0.0
             spacing: 60
             fontName: mainFontLight.name
+            currentWeatherIcon: root.currentWeatherIcon
+            roomTemperatureReal: root.roomTemperatureReal
+            roomTemperatureDecimals: root.roomTemperatureDecimals
+            roomHumidityReal: root.roomHumidityReal
+            roomHumidityDecimals: root.roomHumidityDecimals
+            weatherTemperatureReal: root.weatherTemperatureReal
+            weatherTemperatureDecimals: root.weatherTemperatureDecimals
         }
 
-        Item {
+        Forecast {
             id: forecast
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            width: parent.width
             height: - parent.height
             opacity: 0.0
+            spacing: 20
+            currentWeatherIcon: root.currentWeatherIcon
+            fontName: mainFontRegular.name
+            primaryText: root.weatherTemperatureReal
+            secondaryText: root.weatherTemperatureDecimals
+            primaryTextSize: 56
+            secondaryTextSize: 32
 
-            Text {
-                anchors.fill: parent
-                text: "TEST"
-                color: "white"
-                font.family: mainFontRegular.name
-                font.pointSize: 60
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
+            currentWeather: root.currentWeather
         }
 
-        Item {
+        Row {
             id: currency
 
             anchors.horizontalCenter: parent.horizontalCenter
@@ -298,7 +314,8 @@ Window {
             opacity: 0.0
 
             Text {
-                anchors.fill: parent
+                width: 100
+                height: width
                 text: "TEST"
                 color: "white"
                 font.family: mainFontRegular.name
