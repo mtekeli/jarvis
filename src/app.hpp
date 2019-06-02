@@ -44,6 +44,7 @@ private:
     RoomService* _rs = nullptr;
     LocationService* _ls = nullptr;
     WeatherService* _ws = nullptr;
+    bool _isDev = false;
 };
 
 #endif // APP_H

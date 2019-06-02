@@ -19,6 +19,7 @@ public:
     QString city() const { return _city; }
     QString country() const { return _country; }
     QString countryCode() const { return _countryCode; }
+    void setEnabled(const bool enabled);
 
 signals:
     void cityChanged(QPrivateSignal);
@@ -37,6 +38,7 @@ private:
     QString _country;
     QString _countryCode;
     QNetworkAccessManager _net;
+    bool _enabled = false;
 
     void processReply(QNetworkReply* reply);
     void scheduleRequest(const int duration);

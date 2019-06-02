@@ -38,8 +38,17 @@ LocationService::LocationService(const QString& apiUrl, QObject* parent)
 {
     connect(&_net, &QNetworkAccessManager::finished, this,
             &LocationService::processReply);
+}
 
-    scheduleRequest(REQUEST_INTERVAL);
+void LocationService::setEnabled(const bool enabled)
+{
+    if (_enabled == enabled)
+        return;
+
+    _enabled = enabled;
+
+    if (_enabled)
+        scheduleRequest(REQUEST_INTERVAL);
 }
 
 void LocationService::processReply(QNetworkReply* reply)

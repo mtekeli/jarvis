@@ -47,9 +47,23 @@ WeatherService::WeatherService(const QString& url, QObject* parent)
             &WeatherService::requestCurrentWeather);
 
     _timer.setInterval(REQUEST_INTERVAL);
-    _timer.start();
 
     requestCurrentWeather();
+}
+
+void WeatherService::setEnabled(const bool enabled)
+{
+    if (_enabled == enabled)
+        return;
+
+    _enabled = enabled;
+
+    if (_enabled)
+    {
+        requestCurrentWeather();
+        _timer.start();
+    } else
+        _timer.stop();
 }
 
 void WeatherService::requestCurrentWeather()

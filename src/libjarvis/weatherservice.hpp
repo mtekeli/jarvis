@@ -18,6 +18,7 @@ public:
     WeatherService(const QString& url, QObject* parent = nullptr);
 
     CurrentWeather* currentWeather() const { return _currentWeather; }
+    void setEnabled(const bool enabled);
 
 signals:
     void currentWeatherChanged(QPrivateSignal);
@@ -27,6 +28,7 @@ private:
     QNetworkAccessManager _net;
     QTimer _timer;
     CurrentWeather* _currentWeather = nullptr;
+    bool _enabled = false;
 
     void processReply(QNetworkReply* reply);
     void requestCurrentWeather();
