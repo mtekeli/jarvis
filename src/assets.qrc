@@ -15,5 +15,15 @@
         <file>assets/svg/humidity.svg</file>
         <file>assets/svg/sun.svg</file>
         <file>assets/svg/placeholder.svg</file>
+        <file>assets/svg/weather/clear.svg</file>
+        <file>assets/svg/weather/clouds.svg</file>
+        <file>assets/svg/weather/drizzle.svg</file>
+        <file>assets/svg/weather/mist.svg</file>
+        <file>assets/svg/weather/moon.svg</file>
+        <file>assets/svg/weather/rain.svg</file>
+        <file>assets/svg/weather/snow.svg</file>
+        <file>assets/svg/weather/storm.svg</file>
+        <file>assets/svg/weather/thunderstorm.svg</file>
+        <file>assets/svg/weather/wind.svg</file>
     </qresource>
 </RCC>

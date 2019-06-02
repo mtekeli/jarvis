@@ -14,8 +14,6 @@ class RoomService : public QObject
     Q_PROPERTY(
         Measurement* temperature READ temperature NOTIFY temperatureChanged)
     Q_PROPERTY(Measurement* humidity READ humidity NOTIFY humidityChanged)
-    Q_PROPERTY(QString apiAddr READ apiAddr WRITE setApiAddr)
-    Q_PROPERTY(int interval READ interval WRITE setInterval)
 
 public:
     explicit RoomService(const QString& apiAddress, const int interval,
@@ -23,13 +21,9 @@ public:
 
     Measurement* temperature() const { return _temp; }
     Measurement* humidity() const { return _hum; }
-    QString apiAddr() const { return _address; }
-    int interval() const { return _interval; }
 
 public slots:
     void start();
-    void stop();
-    void restart();
 
 signals:
     void temperatureChanged(QPrivateSignal);
@@ -49,7 +43,5 @@ private:
     void setTemperature(Measurement* m);
     void setHumidity(Measurement* m);
     void processReply(QNetworkReply* reply);
-    void setApiAddr(const QString& addr);
-    void setInterval(int interval);
 };
 #endif // ROOMSERVICE_H

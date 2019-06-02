@@ -14,12 +14,17 @@ public:
 
     QString roomServiceUrl() const { return _roomServiceUrl; }
     int roomServiceInterval() const { return _roomServiceInterval; }
+    bool useIpLocation() const { return _useIpLocation; }
+    QString city() const { return _city; }
+    QString countryCode() const { return _countryCode; }
 
 private:
     QSettings* _settings;
     QString _roomServiceUrl;
     int _roomServiceInterval;
     bool _useIpLocation;
+    QString _city;
+    QString _countryCode;
 
     void resetToDefaults();
     void read();

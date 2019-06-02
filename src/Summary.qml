@@ -5,6 +5,9 @@ Row {
 
     property string fontName
 
+    readonly property var weatherService: App.weatherService
+    readonly property var curentWeather: weatherService ? weatherService.currentWeather : null
+
     // thermometer
     DGauge {
         imageSource: "assets/svg/thermometer.svg"
@@ -25,10 +28,12 @@ Row {
 
     // forecast (TODO)
     DGauge {
-        imageSource: "assets/svg/sun.svg"
+        imageSource: curentWeather ? "assets/svg/weather/"+curentWeather.weather+".svg" : "assets/svg/sun.svg"
+        colorize: true
+        color: "white"
         primaryTextSize: 60
         fontName: fontName
-        primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
-        secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
+        primaryText: curentWeather ? curentWeather.temperature.real: primaryText
+        secondaryText: curentWeather ? curentWeather.temperature.decimals.substring(0,1) + "°" : secondaryText
     }
 }
