@@ -5,11 +5,23 @@
 #include <QNetworkAccessManager>
 #include <QObject>
 
-class ForecastWeather : public CurrentWeather
+struct ForecastInfo
+{
+    MeasurementInfo temperature;
+    QString weather;
+};
+
+class ForecastWeather : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString time READ time NOTIFY timeChanged)
+    /*    Q_PROPERTY(
+            Measurement* temperature READ temperature NOTIFY temperatureChanged)
+        Q_PROPERTY(QString weather READ weather NOTIFY weatherChanged)*/
 
 public:
-    ForecastWeather(QObject* parent = nullptr);
+    ForecastWeather(const ForecastInfo& info, QObject* parent = nullptr);
+
+signals:
+    void temperatureChanged(QPrivateSignal);
+    void weatherChanged(QPrivateSignal);
 };

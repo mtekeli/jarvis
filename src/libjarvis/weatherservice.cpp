@@ -1,4 +1,5 @@
 #include "weatherservice.hpp"
+#include "jarvisconfig.hpp"
 #include "measurement.hpp"
 
 #include <QJsonArray>
@@ -9,11 +10,29 @@
 namespace
 {
 constexpr auto REQUEST_INTERVAL = 5 * 60 * 1000;
+
+QString currentWeatherUrl(const QString& country, const QString& city)
+{
+    return QStringLiteral("http://api.openweathermap.org/data/2.5/"
+                          "weather?q=%1,%2&units=metric&appid=%3")
+        .arg(city)
+        .arg(country)
+        .arg(OPEN_WEATHER_API_KEY);
 }
+
+QString forecastUrl(const QString& country, const QString& city)
+{
+    return QStringLiteral("http://api.openweathermap.org/data/2.5/"
+                          "forecast?cnt=32&q=%1,%2&units=metric&appid=%3")
+        .arg(city)
+        .arg(country)
+        .arg(OPEN_WEATHER_API_KEY);
+}
+} // namespace
 
 namespace helpers
 {
-WeatherInfo parseWeatherData(const QByteArray& data)
+WeatherInfo parseCurrentWeatherData(const QByteArray& data)
 {
     const auto itemDoc = QJsonDocument::fromJson(data);
     const auto rootObject = itemDoc.object();
@@ -42,19 +61,89 @@ WeatherInfo parseWeatherData(const QByteArray& data)
 
     return info;
 }
+
+QList<ForecastInfo> parseForecastData(const QByteArray& data)
+{
+    auto forecasts = QList<ForecastInfo>();
+    forecasts.reserve(3);
+
+    const auto itemDoc = QJsonDocument::fromJson(data);
+    const auto rootObject = itemDoc.object();
+    const auto list = rootObject.value("list").toArray();
+
+    const auto currentDay = QDate::currentDate().day();
+    double maxDay1 = 0.0, maxDay2 = 0.0, maxDay3 = 0.0;
+    QString weatherDay1, weatherDay2, weatherDay3;
+    for (const auto& forecast : list)
+    {
+        const auto forecastData = forecast.toObject();
+        const auto temp =
+            forecastData.value("main").toObject().value("temp").toDouble();
+        const auto weather = forecastData.value("weather")
+                                 .toArray()
+                                 .at(0)
+                                 .toObject()
+                                 .value("main")
+                                 .toString()
+                                 .toLower();
+        const auto dateTime = QDateTime::fromString(
+            forecastData.value("dt_txt").toString(), "yyyy-MM-dd HH:mm:ss");
+        const auto day = dateTime.date().day();
+
+        if (!dateTime.isValid())
+        {
+            qWarning() << "failed to parse date from forecast data";
+            return {};
+        }
+
+        if (currentDay == day)
+            continue;
+
+        if (currentDay + 1 == day && temp > maxDay1)
+        {
+            maxDay1 = temp;
+            weatherDay1 = weather;
+        } else if (currentDay + 2 == day && temp > maxDay2)
+        {
+            maxDay2 = temp;
+            weatherDay2 = weather;
+        } else if (currentDay + 3 == day && temp > maxDay3)
+        {
+            maxDay3 = temp;
+            weatherDay3 = weather;
+        } else if (currentDay + 3 < day)
+            break;
+    }
+
+    const auto forecast1 = ForecastInfo{
+        Measurement::parseMeasurement(QString::number(maxDay1)), weatherDay1};
+    const auto forecast2 = ForecastInfo{
+        Measurement::parseMeasurement(QString::number(maxDay2)), weatherDay2};
+    const auto forecast3 = ForecastInfo{
+        Measurement::parseMeasurement(QString::number(maxDay3)), weatherDay3};
+
+    return {forecast1, forecast2, forecast3};
+}
 } // namespace helpers
 
-WeatherService::WeatherService(const QString& url, QObject* parent)
-    : QObject{parent}, _url{url}, _net{this}, _timer{this}
+WeatherService::WeatherService(const QString& countryCode, const QString city,
+                               QObject* parent)
+    : QObject{parent}, _currentWeatherUrl{currentWeatherUrl(countryCode, city)},
+      _forecastUrl{forecastUrl(countryCode, city)}, _currentWeatherAccess{this},
+      _forecastAccess{this}, _timer{this}
 {
-    connect(&_net, &QNetworkAccessManager::finished, this,
-            &WeatherService::processReply);
+    connect(&_currentWeatherAccess, &QNetworkAccessManager::finished, this,
+            &WeatherService::processCurrentWeatherReply);
+    connect(&_forecastAccess, &QNetworkAccessManager::finished, this,
+            &WeatherService::processForecastReply);
     connect(&_timer, &QTimer::timeout, this,
             &WeatherService::requestCurrentWeather);
+    connect(&_timer, &QTimer::timeout, this, &WeatherService::requestForecast);
 
     _timer.setInterval(REQUEST_INTERVAL);
 
     requestCurrentWeather();
+    requestForecast();
 }
 
 void WeatherService::setEnabled(const bool enabled)
@@ -75,7 +164,13 @@ void WeatherService::setEnabled(const bool enabled)
 void WeatherService::requestCurrentWeather()
 {
     qDebug() << "requesting current weather";
-    _net.get(QNetworkRequest{QUrl{_url}});
+    _currentWeatherAccess.get(QNetworkRequest{QUrl{_currentWeatherUrl}});
+}
+
+void WeatherService::requestForecast()
+{
+    qDebug() << "requesting forecast";
+    _forecastAccess.get(QNetworkRequest{QUrl{_forecastUrl}});
 }
 
 void WeatherService::setCurrentWeather(const WeatherInfo& info)
@@ -88,13 +183,63 @@ void WeatherService::setCurrentWeather(const WeatherInfo& info)
     emit currentWeatherChanged({});
 }
 
-void WeatherService::processReply(QNetworkReply* reply)
+void WeatherService::setForecast(const QList<ForecastInfo>& info)
+{
+    for (const auto& f : _forecast)
+        if (f)
+            f->deleteLater();
+    _forecast.clear();
+
+    _forecast.append(new ForecastWeather{info.at(0), this});
+    _forecast.append(new ForecastWeather{info.at(1), this});
+    _forecast.append(new ForecastWeather{info.at(2), this});
+}
+
+void WeatherService::processCurrentWeatherReply(QNetworkReply* reply)
 {
     reply->deleteLater();
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        qDebug() << QStringLiteral("error received from weather service: ")
+        qDebug()
+            << QStringLiteral(
+                   "error received while processing current weather reply: ")
+            << reply->error();
+        return;
+    }
+
+    const auto code =
+        reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    if (code != 200)
+    {
+        qDebug() << QStringLiteral("response for current weather returned ")
+                 << code;
+        return;
+    }
+
+    const auto result = reply->readAll();
+
+    if (result.isEmpty())
+    {
+        qDebug() << QStringLiteral("no data received for the current weather");
+        return;
+    }
+
+    qDebug() << QStringLiteral("received current weather data:") << result;
+
+    const auto weatherInfo = helpers::parseCurrentWeatherData(result);
+    setCurrentWeather(weatherInfo);
+}
+
+void WeatherService::processForecastReply(QNetworkReply* reply)
+{
+    reply->deleteLater();
+
+    if (reply->error() != QNetworkReply::NoError)
+    {
+        qDebug() << QStringLiteral(
+                        "error received while processing forecast reply: ")
                  << reply->error();
         return;
     }
@@ -104,8 +249,7 @@ void WeatherService::processReply(QNetworkReply* reply)
 
     if (code != 200)
     {
-        qDebug() << QStringLiteral("response from weather service returned ")
-                 << code;
+        qDebug() << QStringLiteral("response for forecast returned ") << code;
         return;
     }
 
@@ -113,12 +257,12 @@ void WeatherService::processReply(QNetworkReply* reply)
 
     if (result.isEmpty())
     {
-        qDebug() << QStringLiteral("no data received from weather service");
+        qDebug() << QStringLiteral("no data received for the forecast");
         return;
     }
 
-    qDebug() << QStringLiteral("received weather data:") << result;
+    qDebug() << QStringLiteral("received forecast data:") << result;
 
-    const auto weatherInfo = helpers::parseWeatherData(result);
-    setCurrentWeather(weatherInfo);
+    const auto forecastInfo = helpers::parseForecastData(result);
+    setForecast(forecastInfo);
 }

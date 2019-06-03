@@ -1,3 +1,5 @@
 #include "forecastweather.hpp"
 
-ForecastWeather::ForecastWeather(QObject* parent) : CurrentWeather(parent) {}
+ForecastWeather::ForecastWeather(const ForecastInfo& info, QObject* parent)
+    : QObject{parent}
+{}
