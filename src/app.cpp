@@ -47,6 +47,7 @@ App::App(int argc, char* argv[]) : QGuiApplication(argc, argv)
     qRegisterMetaType<Measurement*>("Measurement");
     qRegisterMetaType<WeatherService*>("WeatherService");
     qRegisterMetaType<CurrentWeather*>("CurrentWeather");
+    qRegisterMetaType<ForecastWeather*>("Forecast");
 
     _settings = new AppSettings{QGuiApplication::organizationName(),
                                 QGuiApplication::applicationName(), this};

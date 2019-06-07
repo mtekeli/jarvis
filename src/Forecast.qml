@@ -4,6 +4,7 @@ Row {
     id: root
 
     property var currentWeather
+    property var forecast
     property alias currentWeatherIcon: currentWeatherIcon.source
     property alias primaryText: meter.primaryText
     property alias secondaryText: meter.secondaryText
@@ -104,8 +105,8 @@ Row {
         imageSource: "assets/svg/sun.svg"
         primaryTextSize: 50
         fontName: fontName
-        primaryText: "20"
-        secondaryText: "4"
+        primaryText: root.forecast ? root.forecast[0].temperature.real : "0"
+        secondaryText: root.forecast ? root.forecast[0].temperature.decimals.substring(0,1) + "°" : "0"
     }
 
     // day 3
@@ -114,8 +115,8 @@ Row {
         imageSource: "assets/svg/sun.svg"
         primaryTextSize: 50
         fontName: fontName
-        primaryText: "20"
-        secondaryText: "4"
+        primaryText: root.forecast ? root.forecast[1].temperature.real : "0"
+        secondaryText: root.forecast ? root.forecast[1].temperature.decimals.substring(0,1) + "°" : "0"
     }
 
     // day 4
@@ -126,7 +127,7 @@ Row {
         color: "white"
         primaryTextSize: 50
         fontName: fontName
-        primaryText: "20"
-        secondaryText: "4"
+        primaryText: root.forecast ? root.forecast[2].temperature.real : "0"
+        secondaryText: root.forecast ? root.forecast[2].temperature.decimals.substring(0,1) + "°" : "0"
     }
 }

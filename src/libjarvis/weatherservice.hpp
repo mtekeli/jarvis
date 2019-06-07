@@ -12,15 +12,15 @@ class WeatherService : public QObject
     Q_OBJECT
     Q_PROPERTY(CurrentWeather* currentWeather READ currentWeather NOTIFY
                    currentWeatherChanged)
-    //    Q_PROPERTY(
-    //        QList<ForecastWeather*> forecast READ forecast NOTIFY
-    //        forecastChanged)
+    Q_PROPERTY(QVariantList forecast READ forecast NOTIFY forecastChanged)
 
 public:
     WeatherService(const QString& countryCode, const QString city,
                    QObject* parent = nullptr);
 
     CurrentWeather* currentWeather() const { return _currentWeather; }
+    QVariantList forecast() const { return _forecast; }
+
     void setEnabled(const bool enabled);
 
 signals:
@@ -36,7 +36,7 @@ private:
     QNetworkAccessManager _forecastAccess;
     QTimer _timer;
     CurrentWeather* _currentWeather = nullptr;
-    QList<ForecastWeather*> _forecast;
+    QVariantList _forecast;
     bool _enabled = false;
 
     void processCurrentWeatherReply(QNetworkReply* reply);

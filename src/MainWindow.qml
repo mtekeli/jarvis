@@ -9,6 +9,7 @@ Window {
 
     readonly property var weatherService: App.weatherService
     readonly property var currentWeather: weatherService ? weatherService.currentWeather : null
+    readonly property var forecast: weatherService ? weatherService.forecast : null
     readonly property string currentWeatherIcon: currentWeather ? "assets/svg/weather/" + currentWeather.weather + ".svg" : "assets/svg/sun.svg"
     readonly property string roomTemperatureReal: RoomService.temperature ? RoomService.temperature.real : "0"
     readonly property string roomTemperatureDecimals: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : "0"
@@ -302,6 +303,7 @@ Window {
             secondaryTextSize: 32
 
             currentWeather: root.currentWeather
+            forecast: root.forecast
         }
 
         Row {

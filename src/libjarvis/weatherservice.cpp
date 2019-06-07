@@ -186,13 +186,17 @@ void WeatherService::setCurrentWeather(const WeatherInfo& info)
 void WeatherService::setForecast(const QList<ForecastInfo>& info)
 {
     for (const auto& f : _forecast)
-        if (f)
-            f->deleteLater();
+    {
+        auto forecast = f.value<ForecastWeather*>();
+        if (forecast)
+            forecast->deleteLater();
+    }
     _forecast.clear();
 
-    _forecast.append(new ForecastWeather{info.at(0), this});
-    _forecast.append(new ForecastWeather{info.at(1), this});
-    _forecast.append(new ForecastWeather{info.at(2), this});
+    for (const auto& f : info)
+        _forecast << qVariantFromValue(new ForecastWeather{f, this});
+
+    emit forecastChanged({});
 }
 
 void WeatherService::processCurrentWeatherReply(QNetworkReply* reply)
