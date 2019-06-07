@@ -102,7 +102,9 @@ Row {
     // day 2
     DGauge {
         width: 130
-        imageSource: "assets/svg/sun.svg"
+        imageSource: root.forecast ? "assets/svg/weather/" + root.forecast[0].weather : "assets/svg/sun.svg"
+        colorize: true
+        color: "white"
         primaryTextSize: 50
         fontName: fontName
         primaryText: root.forecast ? root.forecast[0].temperature.real : "0"
@@ -112,7 +114,9 @@ Row {
     // day 3
     DGauge {
         width: 130
-        imageSource: "assets/svg/sun.svg"
+        imageSource: root.forecast ? "assets/svg/weather/" + root.forecast[1].weather : "assets/svg/sun.svg"
+        colorize: true
+        color: "white"
         primaryTextSize: 50
         fontName: fontName
         primaryText: root.forecast ? root.forecast[1].temperature.real : "0"
@@ -122,7 +126,7 @@ Row {
     // day 4
     DGauge {
         width: 130
-        imageSource: "assets/svg/sun.svg"
+        imageSource: root.forecast ? "assets/svg/weather/" + root.forecast[2].weather : "assets/svg/sun.svg"
         colorize: true
         color: "white"
         primaryTextSize: 50
