@@ -72,55 +72,94 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
     const auto list = rootObject.value("list").toArray();
 
     const auto currentDay = QDate::currentDate().day();
-    double maxDay1 = 0.0, maxDay2 = 0.0, maxDay3 = 0.0;
-    QString weatherDay1, weatherDay2, weatherDay3;
+    double maxTempDay1 = 0.0, maxTempDay2 = 0.0, maxTempDay3 = 0.0;
+    double minTempDay1 = 99.9, minTempDay2 = 99.9, minTempDay3 = 99.9;
+    QString minWeatherDay1, minWeatherDay2, minWeatherDay3, maxWeatherDay1,
+        maxWeatherDay2, maxWeatherDay3;
     for (const auto& forecast : list)
     {
         const auto forecastData = forecast.toObject();
-        const auto temp =
-            forecastData.value("main").toObject().value("temp").toDouble();
-        const auto weather = forecastData.value("weather")
-                                 .toArray()
-                                 .at(0)
-                                 .toObject()
-                                 .value("main")
-                                 .toString()
-                                 .toLower();
+
         const auto dateTime = QDateTime::fromString(
             forecastData.value("dt_txt").toString(), "yyyy-MM-dd HH:mm:ss");
-        const auto day = dateTime.date().day();
-
         if (!dateTime.isValid())
         {
             qWarning() << "failed to parse date from forecast data";
             return {};
         }
-
+        const auto day = dateTime.date().day();
         if (currentDay == day)
             continue;
 
-        if (currentDay + 1 == day && temp > maxDay1)
+        const auto weatherArr = forecastData.value("weather").toArray();
+        if (weatherArr.isEmpty())
         {
-            maxDay1 = temp;
-            weatherDay1 = weather;
-        } else if (currentDay + 2 == day && temp > maxDay2)
+            qWarning() << "weather information is missing for the date "
+                       << dateTime.toString();
+            return {};
+        }
+
+        const auto weather =
+            weatherArr.at(0).toObject().value("main").toString().toLower();
+
+        const auto temperature =
+            forecastData.value("main").toObject().value("temp").toDouble();
+
+        if (currentDay + 1 == day)
         {
-            maxDay2 = temp;
-            weatherDay2 = weather;
-        } else if (currentDay + 3 == day && temp > maxDay3)
+            if (temperature > maxTempDay1)
+            {
+                maxTempDay1 = temperature;
+                maxWeatherDay1 = weather;
+            }
+            if (temperature < minTempDay1)
+            {
+                minTempDay1 = temperature;
+                minWeatherDay1 = weather;
+            }
+        } else if (currentDay + 2 == day)
         {
-            maxDay3 = temp;
-            weatherDay3 = weather;
+            if (temperature > maxTempDay2)
+            {
+                maxTempDay2 = temperature;
+                maxWeatherDay2 = weather;
+            }
+            if (temperature < minTempDay2)
+            {
+                minTempDay2 = temperature;
+                minWeatherDay2 = weather;
+            }
+        } else if (currentDay + 3 == day)
+        {
+            if (temperature > maxTempDay3)
+            {
+                maxTempDay3 = temperature;
+                maxWeatherDay3 = weather;
+            }
+            if (temperature < minTempDay3)
+            {
+                minTempDay3 = temperature;
+                minWeatherDay3 = weather;
+            }
         } else if (currentDay + 3 < day)
             break;
     }
 
     const auto forecast1 = ForecastInfo{
-        Measurement::parseMeasurement(QString::number(maxDay1)), weatherDay1};
+        Measurement::parseMeasurement(QString::number(maxTempDay1)),
+        maxWeatherDay1,
+        Measurement::parseMeasurement(QString::number(minTempDay1)),
+        minWeatherDay1};
     const auto forecast2 = ForecastInfo{
-        Measurement::parseMeasurement(QString::number(maxDay2)), weatherDay2};
+        Measurement::parseMeasurement(QString::number(maxTempDay2)),
+        maxWeatherDay2,
+        Measurement::parseMeasurement(QString::number(minTempDay2)),
+        minWeatherDay2};
     const auto forecast3 = ForecastInfo{
-        Measurement::parseMeasurement(QString::number(maxDay3)), weatherDay3};
+        Measurement::parseMeasurement(QString::number(maxTempDay3)),
+        maxWeatherDay3,
+        Measurement::parseMeasurement(QString::number(minTempDay3)),
+        minWeatherDay3};
 
     return {forecast1, forecast2, forecast3};
 }
@@ -230,8 +269,6 @@ void WeatherService::processCurrentWeatherReply(QNetworkReply* reply)
         return;
     }
 
-    qDebug() << QStringLiteral("received current weather data:") << result;
-
     const auto weatherInfo = helpers::parseCurrentWeatherData(result);
     setCurrentWeather(weatherInfo);
 }
@@ -264,8 +301,6 @@ void WeatherService::processForecastReply(QNetworkReply* reply)
         qDebug() << QStringLiteral("no data received for the forecast");
         return;
     }
-
-    qDebug() << QStringLiteral("received forecast data:") << result;
 
     const auto forecastInfo = helpers::parseForecastData(result);
     setForecast(forecastInfo);

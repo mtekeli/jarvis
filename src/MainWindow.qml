@@ -277,14 +277,16 @@ Window {
             height: - parent.height
             opacity: 0.0
             spacing: 60
-            fontName: mainFontLight.name
-            currentWeatherIcon: root.currentWeatherIcon
-            roomTemperatureReal: root.roomTemperatureReal
-            roomTemperatureDecimals: root.roomTemperatureDecimals
-            roomHumidityReal: root.roomHumidityReal
-            roomHumidityDecimals: root.roomHumidityDecimals
-            weatherTemperatureReal: root.weatherTemperatureReal
-            weatherTemperatureDecimals: root.weatherTemperatureDecimals
+            fontName: mainFontRegular.name
+            primaryTextSize: 70
+            secondaryTextSize: 35
+            gauge3Icon: root.currentWeatherIcon
+            gauge1Real: root.roomTemperatureReal
+            gauge1Decimals: root.roomTemperatureDecimals
+            gauge2Real: root.roomHumidityReal
+            gauge2Decimals: root.roomHumidityDecimals
+            gauge3Real: root.weatherTemperatureReal
+            gauge3Decimals: root.weatherTemperatureDecimals
         }
 
         Forecast {
@@ -294,13 +296,12 @@ Window {
             anchors.bottom: parent.bottom
             height: - parent.height
             opacity: 0.0
-            spacing: 20
             currentWeatherIcon: root.currentWeatherIcon
-            fontName: mainFontRegular.name
             primaryText: root.weatherTemperatureReal
             secondaryText: root.weatherTemperatureDecimals
-            primaryTextSize: 56
-            secondaryTextSize: 32
+            fontName: mainFontRegular.name
+            primaryTextSize: 70
+            secondaryTextSize: 35
 
             currentWeather: root.currentWeather
             forecast: root.forecast

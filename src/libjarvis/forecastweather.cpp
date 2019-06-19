@@ -3,8 +3,10 @@
 ForecastWeather::ForecastWeather(const ForecastInfo& info, QObject* parent)
     : QObject{parent}
 {
-    setTemperature(info.temperature.real, info.temperature.decimals);
-    setWeather(info.weather);
+    setMaxTemperature(info.maxTemperature.real, info.maxTemperature.decimals);
+    setMaxWeather(info.maxWeather);
+    setMinTemperature(info.minTemperature.real, info.minTemperature.decimals);
+    setMinWeather(info.minWeather);
 }
 
 ForecastWeather::~ForecastWeather()
@@ -12,28 +14,56 @@ ForecastWeather::~ForecastWeather()
     qDebug() << "deleting forecast weather" << this;
 }
 
-void ForecastWeather::setTemperature(const QString& real,
-                                     const QString& decimals)
+void ForecastWeather::setMaxTemperature(const QString& real,
+                                        const QString& decimals)
 {
-    if (_temperature)
+    if (_maxTemperature)
     {
-        if (_temperature->real() == real &&
-            _temperature->decimals() == decimals)
+        if (_maxTemperature->real() == real &&
+            _maxTemperature->decimals() == decimals)
             return;
 
-        _temperature->deleteLater();
+        _maxTemperature->deleteLater();
     }
 
-    _temperature = new Measurement{real, decimals, this};
+    _maxTemperature = new Measurement{real, decimals, this};
 
-    emit temperatureChanged({});
+    emit maxTemperatureChanged({});
 }
-void ForecastWeather::setWeather(const QString& weather)
+
+void ForecastWeather::setMaxWeather(const QString& weather)
 {
-    if (_weather == weather)
+    if (_maxWeather == weather)
         return;
 
-    _weather = weather;
+    _maxWeather = weather;
 
-    emit weatherChanged({});
+    emit maxWeatherChanged({});
+}
+
+void ForecastWeather::setMinTemperature(const QString& real,
+                                        const QString& decimals)
+{
+    if (_minTemperature)
+    {
+        if (_minTemperature->real() == real &&
+            _minTemperature->decimals() == decimals)
+            return;
+
+        _minTemperature->deleteLater();
+    }
+
+    _minTemperature = new Measurement{real, decimals, this};
+
+    emit minTemperatureChanged({});
+}
+
+void ForecastWeather::setMinWeather(const QString& weather)
+{
+    if (_minWeather == weather)
+        return;
+
+    _minWeather = weather;
+
+    emit minWeatherChanged({});
 }

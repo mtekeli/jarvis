@@ -19,18 +19,18 @@ Item {
             text: root.primaryText
             color: "white"
             font.family: root.fontName
-            font.pointSize: root.primaryTextSize
+            font.pixelSize: root.primaryTextSize
         }
 
         Text {
             id: txtSecondary
 
             anchors.bottom: txtPrimary.bottom
-            anchors.bottomMargin: 10
+            anchors.bottomMargin: 8
             text: "." + root.secondaryText
             color: "white"
             font.family: root.fontName
-            font.pointSize: root.secondaryTextSize
+            font.pixelSize: root.secondaryTextSize
         }
     }
 }

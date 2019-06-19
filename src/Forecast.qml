@@ -12,11 +12,71 @@ Row {
     property alias secondaryTextSize: meter.secondaryTextSize
     property alias fontName: meter.fontName
 
+    property string _stateShowMin: "showMinimum"
+
+    Timer {
+        interval: 1500
+        repeat: true
+        running: root.opacity > 0.8
+        onTriggered: state === "" ? state = root._stateShowMin : state = ""
+    }
+
+    states: [
+        State {
+            name: root._stateShowMin
+            PropertyChanges {
+                target: minForecast
+                opacity: 1.0
+                y: 0
+            }
+            PropertyChanges {
+                target: maxForecast
+                opacity: 0.0
+                y: - parent.height / 2
+            }
+        }
+    ]
+
+    transitions: [
+        Transition {
+            from: ""
+            to: root._stateShowMin
+            reversible: true
+
+            ParallelAnimation {
+                NumberAnimation {
+                    target: minForecast
+                    property: "opacity"
+                    duration: 250
+                    easing.type: Easing.InOutQuad
+                }
+                NumberAnimation {
+                    target: minForecast
+                    property: "y"
+                    duration: 250
+                    easing.type: Easing.OutSine
+                }
+                NumberAnimation {
+                    target: maxForecast
+                    property: "opacity"
+                    duration: 250
+                    easing.type: Easing.InOutQuad
+                }
+                NumberAnimation {
+                    target: maxForecast
+                    property: "y"
+                    duration: 250
+                    easing.type: Easing.OutSine
+                }
+            }
+        }
+    ]
+
     Column {
         ImageWithOverlay {
             id: currentWeatherIcon
 
-            width: 110
+            width: 100
             height: width
             colorize: true
             color: "white"
@@ -34,9 +94,9 @@ Row {
     }
 
     Column {
-
         Row {
             spacing: 10
+
             Text {
                 id: wind
 
@@ -99,39 +159,52 @@ Row {
         }
     }
 
-    // day 2
-    DGauge {
-        width: 130
-        imageSource: root.forecast ? "assets/svg/weather/" + root.forecast[0].weather : "assets/svg/sun.svg"
-        colorize: true
-        color: "white"
-        primaryTextSize: 50
-        fontName: fontName
-        primaryText: root.forecast ? root.forecast[0].temperature.real : "0"
-        secondaryText: root.forecast ? root.forecast[0].temperature.decimals.substring(0,1) + "°" : "0"
-    }
+    Item {
+        width: childrenRect.width
+        height: 200
 
-    // day 3
-    DGauge {
-        width: 130
-        imageSource: root.forecast ? "assets/svg/weather/" + root.forecast[1].weather : "assets/svg/sun.svg"
-        colorize: true
-        color: "white"
-        primaryTextSize: 50
-        fontName: fontName
-        primaryText: root.forecast ? root.forecast[1].temperature.real : "0"
-        secondaryText: root.forecast ? root.forecast[1].temperature.decimals.substring(0,1) + "°" : "0"
-    }
+        Summary {
+            id: minForecast
 
-    // day 4
-    DGauge {
-        width: 130
-        imageSource: root.forecast ? "assets/svg/weather/" + root.forecast[2].weather : "assets/svg/sun.svg"
-        colorize: true
-        color: "white"
-        primaryTextSize: 50
-        fontName: fontName
-        primaryText: root.forecast ? root.forecast[2].temperature.real : "0"
-        secondaryText: root.forecast ? root.forecast[2].temperature.decimals.substring(0,1) + "°" : "0"
+            spacing: 5
+            height: parent.height
+            y: parent.height / 2
+            opacity: 0
+            primaryTextSize: 60
+            secondaryTextSize: 30
+            fontName: root.fontName
+
+            gauge1Icon: "assets/svg/weather/" + root.forecast[0].minWeather
+            gauge1Real: root.forecast[0].minTemperature.real
+            gauge1Decimals: root.forecast[0].minTemperature.decimals.substring(0,1)
+            gauge2Icon: "assets/svg/weather/" + root.forecast[1].minWeather
+            gauge2Real: root.forecast[1].minTemperature.real
+            gauge2Decimals: oot.forecast[1].minTemperature.decimals.substring(0,1)
+            gauge3Icon: "assets/svg/weather/" + root.forecast[2].minWeather
+            gauge3Real: root.forecast[2].minTemperature.real
+            gauge3Decimals: root.forecast[2].minTemperature.decimals.substring(0,1)
+        }
+
+        Summary {
+            id: maxForecast
+
+            opacity: 1.0
+            height: parent.height
+            spacing: 5
+            y: 0
+            primaryTextSize: 60
+            secondaryTextSize: 30
+            fontName: root.fontName
+
+            gauge1Icon: "assets/svg/weather/" + root.forecast[0].maxWeather
+            gauge1Real: root.forecast[0].maxTemperature.real
+            gauge1Decimals: root.forecast[0].maxTemperature.decimals.substring(0,1)
+            gauge2Icon: "assets/svg/weather/" + root.forecast[1].maxWeather
+            gauge2Real: root.forecast[1].maxTemperature.real
+            gauge2Decimals: root.forecast[1].maxTemperature.decimals.substring(0,1)
+            gauge3Icon: "assets/svg/weather/" + root.forecast[2].maxWeather
+            gauge3Real: root.forecast[2].maxTemperature.real
+            gauge3Decimals: root.forecast[2].maxTemperature.decimals.substring(0,1)
+        }
     }
 }
