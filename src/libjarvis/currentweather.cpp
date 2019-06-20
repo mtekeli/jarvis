@@ -2,12 +2,12 @@
 
 CurrentWeather::CurrentWeather(QObject* parent) : QObject{parent} {}
 
-CurrentWeather::CurrentWeather(const QString& city,
-                               const MeasurementInfo& temperature,
-                               const QString& weather, const int humidity,
-                               QObject* parent)
-    : QObject{parent}, _city{city}, _weather{weather}, _humidity{humidity}
+CurrentWeather::CurrentWeather(const WeatherInfo& info, QObject* parent)
+    : QObject{parent}, _city{info.city}, _weather{info.weather},
+      _tempMin{info.temp_min}, _tempMax{info.temp_max},
+      _windSpeed{info.windSpeed}, _windDegree{info.windDegree},
+      _humidity{info.humidity}, _pressure{info.pressure}, _rain{info.rain}
 {
     _temperature =
-        new Measurement{temperature.real, temperature.decimals, this};
+        new Measurement{info.temperature.real, info.temperature.decimals, this};
 }

@@ -19,21 +19,15 @@ Item {
     implicitWidth: 160
     implicitHeight: parent.height
 
-    Image {
+    ImageWithOverlay {
         id: icon
+
+        width: 80
+        height: width
         anchors.horizontalCenter: parent.horizontalCenter
         verticalAlignment: Image.AlignBottom
-        width: 64
-        height: width
-        fillMode: Image.PreserveAspectFit
-        mipmap: true
-    }
-
-    ColorOverlay {
-        anchors.fill: icon
-        source: icon
+        colorize: root.colorize
         color: root.color
-        visible: root.colorize
     }
 
     Meter {

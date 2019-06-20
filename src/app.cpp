@@ -47,6 +47,7 @@ App::App(int argc, char* argv[]) : QGuiApplication(argc, argv)
     qRegisterMetaType<Measurement*>("Measurement");
     qRegisterMetaType<WeatherService*>("WeatherService");
     qRegisterMetaType<CurrentWeather*>("CurrentWeather");
+    qRegisterMetaType<ForecastWeather*>("Forecast");
 
     _settings = new AppSettings{QGuiApplication::organizationName(),
                                 QGuiApplication::applicationName(), this};
@@ -62,25 +63,14 @@ App::App(int argc, char* argv[]) : QGuiApplication(argc, argv)
             qDebug() << "location received. Starting weather service based on "
                         "IP location. City:"
                      << _ls->city() << " Country:" << _ls->countryCode();
-            _ws = new WeatherService{
-                QStringLiteral("http://api.openweathermap.org/data/2.5/"
-                               "weather?q=%1,%2&units=metric&appid=%3")
-                    .arg(_ls->city())
-                    .arg(_ls->countryCode())
-                    .arg(OPEN_WEATHER_API_KEY),
-                this};
+            _ws = new WeatherService{_ls->countryCode(), _ls->city(), this};
             _ws->setEnabled(!_isDev);
             emit weatherServiceChanged({});
         });
     else
     {
-        _ws = new WeatherService{
-            QStringLiteral("http://api.openweathermap.org/data/2.5/"
-                           "weather?q=%1,%2&units=metric&appid=%3")
-                .arg(_settings->city())
-                .arg(_settings->countryCode())
-                .arg(OPEN_WEATHER_API_KEY),
-            this};
+        _ws = new WeatherService{_settings->countryCode(), _settings->city(),
+                                 this};
         _ws->setEnabled(!_isDev);
     }
 

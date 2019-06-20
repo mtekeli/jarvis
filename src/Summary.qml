@@ -4,36 +4,49 @@ Row {
     id: root
 
     property string fontName
+    property alias gauge1Icon: gauge1.imageSource
+    property alias gauge1Real: gauge1.primaryText
+    property alias gauge1Decimals: gauge1.secondaryText
+    property alias gauge2Icon: gauge2.imageSource
+    property alias gauge2Real: gauge2.primaryText
+    property alias gauge2Decimals: gauge2.secondaryText
+    property alias gauge3Icon: gauge3.imageSource
+    property alias gauge3Real: gauge3.primaryText
+    property alias gauge3Decimals: gauge3.secondaryText
 
-    readonly property var weatherService: App.weatherService
-    readonly property var curentWeather: weatherService ? weatherService.currentWeather : null
+    property int primaryTextSize: 60
+    property int secondaryTextSize: 32
 
-    // thermometer
     DGauge {
+        id: gauge1
+
         imageSource: "assets/svg/thermometer.svg"
-        primaryTextSize: 60
-        fontName: fontName
-        primaryText: RoomService.temperature ? RoomService.temperature.real : primaryText
-        secondaryText: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : secondaryText
-    }
-
-    // humidity
-    DGauge {
-        imageSource: "assets/svg/humidity.svg"
-        primaryTextSize: 60
-        fontName: fontName
-        primaryText: RoomService.humidity ? RoomService.humidity.real : primaryText
-        secondaryText: RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : secondaryText
-    }
-
-    // forecast (TODO)
-    DGauge {
-        imageSource: curentWeather ? "assets/svg/weather/"+curentWeather.weather+".svg" : "assets/svg/sun.svg"
         colorize: true
         color: "white"
-        primaryTextSize: 60
-        fontName: fontName
-        primaryText: curentWeather ? curentWeather.temperature.real: primaryText
-        secondaryText: curentWeather ? curentWeather.temperature.decimals.substring(0,1) + "°" : secondaryText
+        primaryTextSize: root.primaryTextSize
+        secondaryTextSize: root.secondaryTextSize
+        fontName: root.fontName
+    }
+
+    DGauge {
+        id: gauge2
+
+        imageSource: "assets/svg/humidity.svg"
+        colorize: true
+        color: "white"
+        primaryTextSize: root.primaryTextSize
+        secondaryTextSize: root.secondaryTextSize
+        fontName: root.fontName
+    }
+
+    DGauge {
+        id: gauge3
+
+        imageSource: "assets/svg/sun.svg"
+        colorize: true
+        color: "white"
+        primaryTextSize: root.primaryTextSize
+        secondaryTextSize: root.secondaryTextSize
+        fontName: root.fontName
     }
 }
