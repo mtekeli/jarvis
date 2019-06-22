@@ -10,6 +10,7 @@
 class WeatherService;
 class LocationService;
 class RoomService;
+class CurrencyService;
 
 class App : public QGuiApplication
 {
@@ -44,6 +45,7 @@ private:
     RoomService* _rs = nullptr;
     LocationService* _ls = nullptr;
     WeatherService* _ws = nullptr;
+    CurrencyService* _cs = nullptr;
     bool _isDev = false;
 };
 

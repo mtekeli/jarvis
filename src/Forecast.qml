@@ -179,7 +179,7 @@ Row {
             gauge1Decimals: root.forecast[0].minTemperature.decimals.substring(0,1)
             gauge2Icon: "assets/svg/weather/" + root.forecast[1].minWeather
             gauge2Real: root.forecast[1].minTemperature.real
-            gauge2Decimals: oot.forecast[1].minTemperature.decimals.substring(0,1)
+            gauge2Decimals: root.forecast[1].minTemperature.decimals.substring(0,1)
             gauge3Icon: "assets/svg/weather/" + root.forecast[2].minWeather
             gauge3Real: root.forecast[2].minTemperature.real
             gauge3Decimals: root.forecast[2].minTemperature.decimals.substring(0,1)

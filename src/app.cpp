@@ -1,4 +1,5 @@
 #include "app.hpp"
+#include "libjarvis/currencyservice.hpp"
 #include "libjarvis/locationservice.hpp"
 #include "libjarvis/measurement.hpp"
 #include "libjarvis/roomservice.hpp"
@@ -48,6 +49,9 @@ App::App(int argc, char* argv[]) : QGuiApplication(argc, argv)
     qRegisterMetaType<WeatherService*>("WeatherService");
     qRegisterMetaType<CurrentWeather*>("CurrentWeather");
     qRegisterMetaType<ForecastWeather*>("Forecast");
+    qRegisterMetaType<Currency*>("Currency*");
+    qRegisterMetaType<ExchangeRate*>("ExchangeRate*");
+    qRegisterMetaType<CurrencyService*>("CurrencyService*");
 
     _settings = new AppSettings{QGuiApplication::organizationName(),
                                 QGuiApplication::applicationName(), this};
@@ -74,11 +78,15 @@ App::App(int argc, char* argv[]) : QGuiApplication(argc, argv)
         _ws->setEnabled(!_isDev);
     }
 
+    _cs = new CurrencyService{this};
+
     engine.addImportPath("qrc:/");
     engine.rootContext()->setContextProperty(QStringLiteral("RoomService"),
                                              _rs);
     engine.rootContext()->setContextProperty(QStringLiteral("LocationService"),
                                              _ls);
+    engine.rootContext()->setContextProperty(QStringLiteral("CurrencyService"),
+                                             _cs);
     engine.rootContext()->setContextProperty(QStringLiteral("App"), this);
     engine.load(QUrl{QStringLiteral("qrc:/MainWindow.qml")});
 }

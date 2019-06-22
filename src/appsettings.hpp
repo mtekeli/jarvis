@@ -19,7 +19,7 @@ public:
     QString countryCode() const { return _countryCode; }
 
 private:
-    QSettings* _settings;
+    QSettings* _settings = nullptr;
     QString _roomServiceUrl;
     int _roomServiceInterval;
     bool _useIpLocation;

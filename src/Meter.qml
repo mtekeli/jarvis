@@ -9,7 +9,30 @@ Item {
     property int secondaryTextSize: 32
     property string fontName
 
+    clip: true
+
     width: txtPrimary.contentWidth + txtSecondary.contentWidth
+
+    states: [
+        State {
+            name: "gauge"
+            when: txtPrimary.font.pixelSize > txtSecondary.font.pixelSize
+            PropertyChanges {
+                target: txtSecondary
+                anchors.bottom: txtPrimary.bottom
+                anchors.bottomMargin: 8
+            }
+        },
+        State {
+            name: "reversed"
+            when: txtPrimary.font.pixelSize < txtSecondary.font.pixelSize
+            PropertyChanges {
+                target: txtPrimary
+                anchors.bottomMargin: 8
+                anchors.bottom: txtSecondary.bottom
+            }
+        }
+    ]
 
     Row {
 
@@ -25,8 +48,6 @@ Item {
         Text {
             id: txtSecondary
 
-            anchors.bottom: txtPrimary.bottom
-            anchors.bottomMargin: 8
             text: "." + root.secondaryText
             color: "white"
             font.family: root.fontName

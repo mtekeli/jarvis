@@ -161,7 +161,7 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
         Measurement::parseMeasurement(QString::number(minTempDay3)),
         minWeatherDay3};
 
-    return {forecast1, forecast2, forecast3};
+    return QList<ForecastInfo>{} << forecast1 << forecast2 << forecast3;
 }
 } // namespace helpers
 
@@ -203,13 +203,13 @@ void WeatherService::setEnabled(const bool enabled)
 void WeatherService::requestCurrentWeather()
 {
     qDebug() << "requesting current weather";
-    _currentWeatherAccess.get(QNetworkRequest{QUrl{_currentWeatherUrl}});
+    _currentWeatherAccess.get(QNetworkRequest{{_currentWeatherUrl}});
 }
 
 void WeatherService::requestForecast()
 {
     qDebug() << "requesting forecast";
-    _forecastAccess.get(QNetworkRequest{QUrl{_forecastUrl}});
+    _forecastAccess.get(QNetworkRequest{{_forecastUrl}});
 }
 
 void WeatherService::setCurrentWeather(const WeatherInfo& info)
