@@ -180,9 +180,6 @@ WeatherService::WeatherService(const QString& countryCode, const QString city,
     connect(&_timer, &QTimer::timeout, this, &WeatherService::requestForecast);
 
     _timer.setInterval(REQUEST_INTERVAL);
-
-    requestCurrentWeather();
-    requestForecast();
 }
 
 void WeatherService::setEnabled(const bool enabled)
@@ -195,6 +192,7 @@ void WeatherService::setEnabled(const bool enabled)
     if (_enabled)
     {
         requestCurrentWeather();
+        requestForecast();
         _timer.start();
     } else
         _timer.stop();
