@@ -10,6 +10,8 @@
 namespace
 {
 constexpr auto REQUEST_INTERVAL = 5 * 60 * 1000;
+constexpr auto DEFAULT_MIN_TEMPERATURE = 99.9;
+constexpr auto DEFAULT_MAX_TEMPERATURE = 0.0;
 
 QString currentWeatherUrl(const QString& country, const QString& city)
 {
@@ -71,11 +73,15 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
     const auto rootObject = itemDoc.object();
     const auto list = rootObject.value("list").toArray();
 
-    const auto currentDay = QDate::currentDate().day();
     double maxTempDay1 = 0.0, maxTempDay2 = 0.0, maxTempDay3 = 0.0;
     double minTempDay1 = 99.9, minTempDay2 = 99.9, minTempDay3 = 99.9;
     QString minWeatherDay1, minWeatherDay2, minWeatherDay3, maxWeatherDay1,
         maxWeatherDay2, maxWeatherDay3;
+    const auto day0 = QDate::currentDate().day();
+    const auto day1 = QDate::currentDate().addDays(1).day();
+    const auto day2 = QDate::currentDate().addDays(2).day();
+    const auto day3 = QDate::currentDate().addDays(3).day();
+
     for (const auto& forecast : list)
     {
         const auto forecastData = forecast.toObject();
@@ -88,7 +94,8 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
             return {};
         }
         const auto day = dateTime.date().day();
-        if (currentDay == day)
+        // skip the current day
+        if (day0 == day)
             continue;
 
         const auto weatherArr = forecastData.value("weather").toArray();
@@ -105,7 +112,7 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
         const auto temperature =
             forecastData.value("main").toObject().value("temp").toDouble();
 
-        if (currentDay + 1 == day)
+        if (day1 == day)
         {
             if (temperature > maxTempDay1)
             {
@@ -117,7 +124,7 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
                 minTempDay1 = temperature;
                 minWeatherDay1 = weather;
             }
-        } else if (currentDay + 2 == day)
+        } else if (day2 == day)
         {
             if (temperature > maxTempDay2)
             {
@@ -129,7 +136,7 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
                 minTempDay2 = temperature;
                 minWeatherDay2 = weather;
             }
-        } else if (currentDay + 3 == day)
+        } else if (day3 == day)
         {
             if (temperature > maxTempDay3)
             {
@@ -141,9 +148,16 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
                 minTempDay3 = temperature;
                 minWeatherDay3 = weather;
             }
-        } else if (currentDay + 3 < day)
+        } else if (day3 < day)
             break;
     }
+
+    if (minTempDay1 == DEFAULT_MIN_TEMPERATURE)
+        minTempDay1 = 0;
+    if (minTempDay2 == DEFAULT_MIN_TEMPERATURE)
+        minTempDay2 = 0;
+    if (minTempDay3 == DEFAULT_MIN_TEMPERATURE)
+        minTempDay3 = 0;
 
     const auto forecast1 = ForecastInfo{
         Measurement::parseMeasurement(QString::number(maxTempDay1)),
