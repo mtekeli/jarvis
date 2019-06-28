@@ -46,7 +46,7 @@ void AppSettings::resetToDefaults()
 
 void AppSettings::read()
 {
-    qDebug() << "reading setings";
+    qDebug() << "reading settings";
     _settings->sync();
     _settings->beginGroup(SETTING_GROUP_1);
     _useIpLocation = _settings->value(SETTING_KEY_USE_IP_LOCATION).toBool();
