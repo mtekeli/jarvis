@@ -1,6 +1,7 @@
 #include "appsettings.hpp"
 
 #include <QDebug>
+#include <QSettings>
 
 constexpr auto DEFAULT_ROOM_SERVICE_URL = "http://localhost:8080";
 constexpr auto DEFAULT_ROOM_SERVICE_INTERVAL = 1000;

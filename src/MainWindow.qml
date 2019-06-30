@@ -45,7 +45,6 @@ Window {
     FontLoader { id: mainFontLight; source: "assets/fonts/ClearSans-Thin.ttf" }
 
     Component.onCompleted: {
-        RoomService.start()
         initialized = true
         footer.switchState()
     }

@@ -27,6 +27,10 @@ RoomService::RoomService(const QString& apiAddress, const int interval,
     connect(&_net, &QNetworkAccessManager::finished, this,
             &RoomService::processReply);
     connect(&_apiTimer, &QTimer::timeout, this, &RoomService::getMeasurements);
+
+    qDebug() << "starting room service with interval of " << _interval;
+    getMeasurements();
+    _apiTimer.start();
 }
 
 void RoomService::setTemperature(Measurement* m)
@@ -106,11 +110,4 @@ void RoomService::processReply(QNetworkReply* reply)
 void RoomService::getMeasurements()
 {
     _net.get(QNetworkRequest{QUrl{_address}});
-}
-
-void RoomService::start()
-{
-    qDebug() << QStringLiteral("starting with interval of ") << _interval;
-    getMeasurements();
-    _apiTimer.start();
 }

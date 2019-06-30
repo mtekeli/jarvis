@@ -1,12 +1,11 @@
-#ifndef APP_H
-#define APP_H
+#pragma once
 
-#include "appsettings.hpp"
 #include "jarvisconfig.hpp"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+class AppSettings;
 class WeatherService;
 class LocationService;
 class RoomService;
@@ -40,6 +39,11 @@ signals:
     void weatherServiceChanged(QPrivateSignal);
 
 private:
+    void setApplicationInfo();
+    void processOptions();
+    void registerComponents();
+    void initializeComponents();
+
     QQmlApplicationEngine engine = {this};
     AppSettings* _settings = nullptr;
     RoomService* _rs = nullptr;
@@ -48,5 +52,3 @@ private:
     CurrencyService* _cs = nullptr;
     bool _isDev = false;
 };
-
-#endif // APP_H

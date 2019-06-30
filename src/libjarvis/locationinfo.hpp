@@ -1,5 +1,4 @@
-#ifndef LOCATIONINFO_H
-#define LOCATIONINFO_H
+#pragma once
 
 #include <QObject>
 
@@ -12,5 +11,3 @@ struct LocationInfo
     QString currency;
     QString timezone;
 };
-
-#endif // LOCATIONINFO_H

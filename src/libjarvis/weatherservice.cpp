@@ -73,8 +73,12 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
     const auto rootObject = itemDoc.object();
     const auto list = rootObject.value("list").toArray();
 
-    double maxTempDay1 = 0.0, maxTempDay2 = 0.0, maxTempDay3 = 0.0;
-    double minTempDay1 = 99.9, minTempDay2 = 99.9, minTempDay3 = 99.9;
+    double maxTempDay1 = DEFAULT_MAX_TEMPERATURE,
+           maxTempDay2 = DEFAULT_MAX_TEMPERATURE,
+           maxTempDay3 = DEFAULT_MAX_TEMPERATURE;
+    double minTempDay1 = DEFAULT_MIN_TEMPERATURE,
+           minTempDay2 = DEFAULT_MIN_TEMPERATURE,
+           minTempDay3 = DEFAULT_MIN_TEMPERATURE;
     QString minWeatherDay1, minWeatherDay2, minWeatherDay3, maxWeatherDay1,
         maxWeatherDay2, maxWeatherDay3;
     const auto day0 = QDate::currentDate().day();
@@ -152,11 +156,11 @@ QList<ForecastInfo> parseForecastData(const QByteArray& data)
             break;
     }
 
-    if (minTempDay1 == DEFAULT_MIN_TEMPERATURE)
+    if (qFuzzyCompare(minTempDay1, DEFAULT_MIN_TEMPERATURE))
         minTempDay1 = 0;
-    if (minTempDay2 == DEFAULT_MIN_TEMPERATURE)
+    if (qFuzzyCompare(minTempDay2, DEFAULT_MIN_TEMPERATURE))
         minTempDay2 = 0;
-    if (minTempDay3 == DEFAULT_MIN_TEMPERATURE)
+    if (qFuzzyCompare(minTempDay3, DEFAULT_MIN_TEMPERATURE))
         minTempDay3 = 0;
 
     const auto forecast1 = ForecastInfo{

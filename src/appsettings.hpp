@@ -1,8 +1,8 @@
-#ifndef APP_SETTINGS_H
-#define APP_SETTINGS_H
+#pragma once
 
 #include <QObject>
-#include <QSettings>
+
+class QSettings;
 
 class AppSettings : public QObject
 {
@@ -29,5 +29,3 @@ private:
     void resetToDefaults();
     void read();
 };
-
-#endif // APP_SETTINGS_H
