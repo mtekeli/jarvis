@@ -18,7 +18,7 @@ config:
 
 config-rpi:
 	@ mkdir -p ${BUILD_NAME}
-	@ cd ${BUILD_NAME} && cmake ${CMAKE_OPTIONS} -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake ../
+	@ cd ${BUILD_NAME} && cmake ${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake ../
 
 qtc:
 	@ qtcreator ${ROOT_DIR}/CMakeLists.txt

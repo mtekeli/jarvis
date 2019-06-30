@@ -14,6 +14,8 @@ set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/$ENV{BUILD_NAME}/output")
 # Including custom cmake rules
 include(clang-tools.cmake)
 
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
 IF(CMAKE_CROSSCOMPILING)
     #SET(DEFINES -DQT_NO_EXCEPTIONS -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB)
     #SET(CFLAGS -march=armv8-a -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard --sysroot=/root/raspi/sysroot -O2 -fno-exceptions -Wall -W -D_REENTRANT -fPIC $(DEFINES))
