@@ -1,5 +1,4 @@
-#ifndef ROOMSERVICE_H
-#define ROOMSERVICE_H
+#pragma once
 
 #include <QNetworkAccessManager>
 #include <QObject>
@@ -22,9 +21,6 @@ public:
     Measurement* temperature() const { return _temp; }
     Measurement* humidity() const { return _hum; }
 
-public slots:
-    void start();
-
 signals:
     void temperatureChanged(QPrivateSignal);
     void humidityChanged(QPrivateSignal);
@@ -44,4 +40,3 @@ private:
     void setHumidity(Measurement* m);
     void processReply(QNetworkReply* reply);
 };
-#endif // ROOMSERVICE_H

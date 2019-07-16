@@ -1,4 +1,4 @@
-ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+ROOT_DIR:=${shell dirname ${realpath ${lastword ${MAKEFILE_LIST}}}}
 
 .PHONY: build, config, config-rpi, build, fmt, install, deploy, docker, qtc, clean
 
@@ -14,14 +14,14 @@ deploy: install
 
 config:
 	@ mkdir -p ${BUILD_NAME}
-	@ cd ${BUILD_NAME} && cmake ${CMAKE_OPTIONS} ../
+	@ cd ${BUILD_NAME} && cmake ${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=Release ../
 
 config-rpi:
 	@ mkdir -p ${BUILD_NAME}
-	@ cd ${BUILD_NAME} && cmake ${CMAKE_OPTIONS} -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake ../
+	@ cd ${BUILD_NAME} && cmake ${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake ../
 
 qtc:
-	@ qtcreator $(ROOT_DIR)/CMakeLists.txt
+	@ qtcreator ${ROOT_DIR}/CMakeLists.txt
 
 docker:
 	@ mkdir -p .ssh && cp ${SSH_KEY_FILE} .ssh/id_rsa
@@ -34,8 +34,9 @@ docker:
 		--env BUILD_NAME=linux-armhf-rpi \
 		--env JARVIS_HOST=${JARVIS_HOST} \
 		--env JARVIS_DOMAIN=${JARVIS_DOMAIN} \
-		--env IPDATA_API_KEY=$(IPDATA_API_KEY) \
-		--env OPEN_WEATHER_API_KEY=$(OPEN_WEATHER_API_KEY) \
+		--env IPDATA_API_KEY=${IPDATA_API_KEY} \
+		--env OPEN_WEATHER_API_KEY=${OPEN_WEATHER_API_KEY} \
+		--env FIXER_EXCHANGES_API_KEY=${FIXER_EXCHANGES_API_KEY} \
 		mustafatekeli/jarvis-cross-compile
 
 fmt: config

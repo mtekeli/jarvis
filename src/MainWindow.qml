@@ -18,6 +18,23 @@ Window {
     readonly property string weatherTemperatureReal: currentWeather ? currentWeather.temperature.real : "0"
     readonly property string weatherTemperatureDecimals: currentWeather ? currentWeather.temperature.decimals.substring(0,1) + "°" : "0"
 
+    readonly property var currentRates: CurrencyService ? CurrencyService.rates : null
+    readonly property var currency1: currentRates ? currentRates.currency1 : null
+    readonly property var currency2: currentRates ? currentRates.currency2 : null
+    readonly property var currency3: currentRates ? currentRates.currency3 : null
+    readonly property var currency1Value: currency1 ? currency1.value : null
+    readonly property var currency2Value: currency2 ? currency2.value : null
+    readonly property var currency3Value: currency3 ? currency3.value : null
+    readonly property string currency1Icon: "assets/svg/currency/"+ (currency1 ? currency1.currency : "placeholder")  +".svg"
+    readonly property string currency2Icon: "assets/svg/currency/"+ (currency2 ? currency2.currency : "placeholder")  +".svg"
+    readonly property string currency3Icon: "assets/svg/currency/"+ (currency3 ? currency3.currency : "placeholder")  +".svg"
+    readonly property string currency1ValueReal: currency1Value ? currency1Value.real : "0"
+    readonly property string currency1ValueDecimals: currency1Value ? currency1Value.decimals.substring(0,2) : "0"
+    readonly property string currency2ValueReal: currency2Value ? currency2Value.real : "0"
+    readonly property string currency2ValueDecimals: currency2Value ? currency2Value.decimals.substring(0,2) : "0"
+    readonly property string currency3ValueReal: currency3Value ? currency3Value.real : "0"
+    readonly property string currency3ValueDecimals: currency3Value ? currency3Value.decimals.substring(0,2) : "0"
+
     visible: true
     title: qsTr("Jarvis")
     color: "black"
@@ -28,7 +45,6 @@ Window {
     FontLoader { id: mainFontLight; source: "assets/fonts/ClearSans-Thin.ttf" }
 
     Component.onCompleted: {
-        RoomService.start()
         initialized = true
         footer.switchState()
     }
@@ -131,7 +147,7 @@ Window {
             else if (state === state1)
                 footer.state = state2
             else if (state === state2)
-                footer.state = state1
+                footer.state = state3
         }
 
         Timer {
@@ -243,12 +259,12 @@ Window {
                 }
             },
             Transition {
-                from: footer.state2
+                from: footer.state3
                 to: footer.state1
 
                 ParallelAnimation {
                     NumberAnimation {
-                        target: forecast
+                        target: currency
                         property: "opacity"
                         duration: 500
                         easing.type: Easing.InOutQuad
@@ -307,25 +323,26 @@ Window {
             forecast: root.forecast
         }
 
-        Row {
+        Summary {
             id: currency
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            width: parent.width
             height: - parent.height
             opacity: 0.0
-
-            Text {
-                width: 100
-                height: width
-                text: "TEST"
-                color: "white"
-                font.family: mainFontRegular.name
-                font.pointSize: 60
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
+            spacing: 60
+            fontName: mainFontRegular.name
+            primaryTextSize: 50
+            secondaryTextSize: 70
+            gauge1Real: root.currency1ValueReal
+            gauge1Decimals: root.currency1ValueDecimals
+            gauge1Icon: root.currency1Icon
+            gauge2Real: root.currency2ValueReal
+            gauge2Decimals: root.currency2ValueDecimals
+            gauge2Icon: root.currency2Icon
+            gauge3Real: root.currency3ValueReal
+            gauge3Decimals: root.currency3ValueDecimals
+            gauge3Icon: root.currency3Icon
         }
 
         // version

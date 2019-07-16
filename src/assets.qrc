@@ -26,5 +26,9 @@
         <file>assets/svg/weather/storm.svg</file>
         <file>assets/svg/weather/thunderstorm.svg</file>
         <file>assets/svg/weather/wind.svg</file>
+        <file>assets/svg/currency/TRY.svg</file>
+        <file>assets/svg/currency/USD.svg</file>
+        <file>assets/svg/currency/GBP.svg</file>
+        <file>assets/svg/currency/placeholder.svg</file>
     </qresource>
 </RCC>

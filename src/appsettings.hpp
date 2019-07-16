@@ -1,8 +1,8 @@
-#ifndef APP_SETTINGS_H
-#define APP_SETTINGS_H
+#pragma once
 
 #include <QObject>
-#include <QSettings>
+
+class QSettings;
 
 class AppSettings : public QObject
 {
@@ -19,7 +19,7 @@ public:
     QString countryCode() const { return _countryCode; }
 
 private:
-    QSettings* _settings;
+    QSettings* _settings = nullptr;
     QString _roomServiceUrl;
     int _roomServiceInterval;
     bool _useIpLocation;
@@ -29,5 +29,3 @@ private:
     void resetToDefaults();
     void read();
 };
-
-#endif // APP_SETTINGS_H

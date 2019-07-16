@@ -64,7 +64,7 @@ signals:
 private:
     QString _city;
     QString _weather;
-    Measurement* _temperature;
+    Measurement* _temperature = nullptr;
     int _tempMin;
     int _tempMax;
     double _windSpeed;

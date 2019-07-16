@@ -1,5 +1,4 @@
-#ifndef MEASUREMENT_H
-#define MEASUREMENT_H
+#pragma once
 
 #include <QObject>
 
@@ -37,5 +36,3 @@ private:
     QString _real;
     QString _decimals;
 };
-
-#endif // MEASUREMENT_H

@@ -1,5 +1,4 @@
-#ifndef LOCATIONSERVICE_H
-#define LOCATIONSERVICE_H
+#pragma once
 
 #include <QNetworkAccessManager>
 #include <QObject>
@@ -43,4 +42,3 @@ private:
     void processReply(QNetworkReply* reply);
     void scheduleRequest(const int duration);
 };
-#endif // LOCATIONSERVICE_H

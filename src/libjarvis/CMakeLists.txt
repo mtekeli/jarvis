@@ -16,6 +16,12 @@ add_library(libjarvis
     "roomservice.cpp"
     "measurement.hpp"
     "measurement.cpp"
+    "currencyservice.hpp"
+    "currencyservice.cpp"
+    "exchangerate.hpp"
+    "exchangerate.cpp"
+    "currency.hpp"
+    "currency.cpp"
 )
 
 find_package(Qt5 COMPONENTS Core Quick REQUIRED)

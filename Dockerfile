@@ -1,7 +1,7 @@
-FROM mustafatekeli/qtbuilder:amd64-rpi-cross-compile-base-5.12.3-1
+FROM mustafatekeli/qtbuilder:amd64-rpi-cross-compile-base-5.12.4-1
 
 ARG JARVIS_HOST
-ARG QT_VERSION=5.12.3
+ARG QT_VERSION=5.12.4
 ARG RPI_DIR=/root/raspi
 ARG DEV_BINS=${RPI_DIR}/qt5pi
 ARG HOST_BINS=${RPI_DIR}/qt5
