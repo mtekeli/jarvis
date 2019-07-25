@@ -26,7 +26,7 @@ docker:
 		--build-arg JARVIS_HOST=${JARVIS_HOST} \
 		.
 	@ docker run --rm -it --name qt-build \
-		-v /Users/mustafatekeli/dev/ws/jarvis:/root/jarvis \
+		-v ${ROOT_DIR}:/root/jarvis \
 		--workdir=//root/jarvis \
 		--env BUILD_NAME=linux-armhf-rpi \
 		--env JARVIS_HOST=${JARVIS_HOST} \
