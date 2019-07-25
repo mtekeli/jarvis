@@ -25,9 +25,9 @@ Window {
     readonly property var currency1Value: currency1 ? currency1.value : null
     readonly property var currency2Value: currency2 ? currency2.value : null
     readonly property var currency3Value: currency3 ? currency3.value : null
-    readonly property string currency1Icon: "assets/svg/currency/"+ (currency1 ? currency1.currency : "placeholder")  +".svg"
-    readonly property string currency2Icon: "assets/svg/currency/"+ (currency2 ? currency2.currency : "placeholder")  +".svg"
-    readonly property string currency3Icon: "assets/svg/currency/"+ (currency3 ? currency3.currency : "placeholder")  +".svg"
+    readonly property string currency1Icon: "assets/svg/currency/"+ (currency1 && currency1.currency ? currency1.currency : "placeholder")  +".svg"
+    readonly property string currency2Icon: "assets/svg/currency/"+ (currency2 && currency2.currency ? currency2.currency : "placeholder")  +".svg"
+    readonly property string currency3Icon: "assets/svg/currency/"+ (currency3 && currency3.currency ? currency3.currency : "placeholder")  +".svg"
     readonly property string currency1ValueReal: currency1Value ? currency1Value.real : "0"
     readonly property string currency1ValueDecimals: currency1Value ? currency1Value.decimals.substring(0,2) : "0"
     readonly property string currency2ValueReal: currency2Value ? currency2Value.real : "0"
