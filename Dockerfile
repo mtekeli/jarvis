@@ -1,7 +1,11 @@
-FROM mustafatekeli/qtbuilder:amd64-rpi-cross-compile-base-5.12.5-1
+ARG QT_VERSION=5.12.5
+ARG NUM_PARALLEL_JOBS=4
+
+FROM mustafatekeli/qtbuilder:amd64-rpi-cross-compile-base-${QT_VERSION}-1
 
 ARG JARVIS_HOST
-ARG QT_VERSION=5.12.5
+ARG QT_VERSION
+ARG NUM_PARALLEL_JOBS
 ARG RPI_DIR=/root/raspi
 ARG DEV_BINS=${RPI_DIR}/qt5pi
 ARG HOST_BINS=${RPI_DIR}/qt5
@@ -21,44 +25,16 @@ RUN apt-get update && \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
+COPY /sh/qt-install-module.sh ${RPI_DIR}/qt-install-module.sh
+
 RUN echo ${QT_MODULES} && mkdir ${QT_MODULES} \
-	&& cd ${QT_MODULES} \
-	&& git clone git://code.qt.io/qt/qtdeclarative.git -b ${QT_VERSION} \
-	&& git clone git://code.qt.io/qt/qtquickcontrols.git -b ${QT_VERSION} \
-	&& git clone git://code.qt.io/qt/qtquickcontrols2.git -b ${QT_VERSION} \
-	&& git clone git://code.qt.io/qt/qtmultimedia.git -b ${QT_VERSION} \
-	&& git clone git://code.qt.io/qt/qtsvg.git -b ${QT_VERSION} \
-	&& git clone git://code.qt.io/qt/qtgraphicaleffects.git -b ${QT_VERSION}
-
-RUN cd ${QT_MODULES}/qtdeclarative \
-	&& ${HOST_BINS}/bin/qmake \
-	&& make -j4 \
-	&& make install
-
-RUN cd ${QT_MODULES}/qtquickcontrols \
-	&& ${HOST_BINS}/bin/qmake \
-	&& make -j4 \
-	&& make install
-
-RUN cd ${QT_MODULES}/qtquickcontrols2 \
-	&& ${HOST_BINS}/bin/qmake \
-	&& make -j4 \
-	&& make install
-
-RUN cd ${QT_MODULES}/qtmultimedia \
-	&& ${HOST_BINS}/bin/qmake \
-	&& make -j4 \
-	&& make install 
-
-RUN cd ${QT_MODULES}/qtsvg \
-	&& ${HOST_BINS}/bin/qmake \
-	&& make -j4 \
-	&& make install 
-
-RUN cd ${QT_MODULES}/qtgraphicaleffects \
-	&& ${HOST_BINS}/bin/qmake \
-	&& make -j4 \
-	&& make install 
+	&& cd ${RPI_DIR} \
+	&& sh qt-install-module.sh ${QT_MODULES} ${QT_VERSION} ${HOST_BINS}/bin/qmake ${NUM_PARALLEL_JOBS} "qtdeclarative" \
+	&& sh qt-install-module.sh ${QT_MODULES} ${QT_VERSION} ${HOST_BINS}/bin/qmake ${NUM_PARALLEL_JOBS} "qtquickcontrols" \
+	&& sh qt-install-module.sh ${QT_MODULES} ${QT_VERSION} ${HOST_BINS}/bin/qmake ${NUM_PARALLEL_JOBS} "qtquickcontrols2" \
+	&& sh qt-install-module.sh ${QT_MODULES} ${QT_VERSION} ${HOST_BINS}/bin/qmake ${NUM_PARALLEL_JOBS} "qtmultimedia" \
+	&& sh qt-install-module.sh ${QT_MODULES} ${QT_VERSION} ${HOST_BINS}/bin/qmake ${NUM_PARALLEL_JOBS} "qtsvg" \
+	&& sh qt-install-module.sh ${QT_MODULES} ${QT_VERSION} ${HOST_BINS}/bin/qmake ${NUM_PARALLEL_JOBS} "qtgraphicaleffects"
 
 # copy over the ssh profile to connect to rpi
 RUN rm -rf /root/.ssh/id_rsa

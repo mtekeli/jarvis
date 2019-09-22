@@ -3,7 +3,7 @@ ROOT_DIR:=${shell dirname ${realpath ${lastword ${MAKEFILE_LIST}}}}
 .PHONY: build, config, config-rpi, build, fmt, install, deploy, docker, qtc, clean
 
 build:
-	@ cd ${BUILD_NAME} && make
+	@ cd ${BUILD_NAME} && make -j4
 
 install: build
 	@ cd ${BUILD_NAME} && make install
