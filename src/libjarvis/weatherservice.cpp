@@ -51,6 +51,9 @@ WeatherInfo parseCurrentWeatherData(const QByteArray& data)
 
     WeatherInfo info;
     info.temperature = Measurement::parseMeasurement(QString::number(temp));
+    if (info.temperature.real.isEmpty())
+        qWarning() << "failed to extract weather temp from data" << temp
+                   << mainObject.value("temp") << mainObject;
     info.temp_min = static_cast<int>(mainObject.value("temp_min").toDouble());
     info.temp_max = static_cast<int>(mainObject.value("temp_max").toDouble());
     info.humidity = mainObject.value("humidity").toInt();
