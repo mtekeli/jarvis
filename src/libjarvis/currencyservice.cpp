@@ -37,7 +37,7 @@ ExchangeRateInfo parseExchangeRates(const QByteArray& data)
     const auto rateUSD = rates.value("USD").toDouble();
     const auto rateGBP = rates.value("GBP").toDouble();
 
-    qDebug() << "TRY:" << rateTRY << " USD:" << rateUSD << " GBP" << rateGBP;
+    // qDebug() << "TRY:" << rateTRY << " USD:" << rateUSD << " GBP" << rateGBP;
 
     ExchangeRateInfo info;
     info.base = base;
@@ -68,7 +68,7 @@ CurrencyService::CurrencyService(QObject* parent)
 
 void CurrencyService::requestExchangeRates()
 {
-    qDebug() << "requesting exchange rates";
+    // qDebug() << "requesting exchange rates";
     _net.get(QNetworkRequest{{REQUEST_URL}});
 }
 

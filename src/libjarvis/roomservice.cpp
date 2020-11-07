@@ -92,7 +92,7 @@ void RoomService::processReply(QNetworkReply* reply)
         return;
     }
 
-    qDebug() << QStringLiteral("received data:") << result;
+    // qDebug() << QStringLiteral("received data:") << result;
     Measurement* temperature = nullptr;
     Measurement* humidity = nullptr;
 

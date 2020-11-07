@@ -218,13 +218,13 @@ void WeatherService::setEnabled(const bool enabled)
 
 void WeatherService::requestCurrentWeather()
 {
-    qDebug() << "requesting current weather";
+    // qDebug() << "requesting current weather";
     _currentWeatherAccess.get(QNetworkRequest{{_currentWeatherUrl}});
 }
 
 void WeatherService::requestForecast()
 {
-    qDebug() << "requesting forecast";
+    // qDebug() << "requesting forecast";
     _forecastAccess.get(QNetworkRequest{{_forecastUrl}});
 }
 

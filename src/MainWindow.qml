@@ -159,7 +159,7 @@ Window {
             onTriggered: footer.switchState()
         }
 
-        onStateChanged: console.info("state changed to " + state)
+        //onStateChanged: console.info("state changed to " + state)
 
         states: [
             State {
