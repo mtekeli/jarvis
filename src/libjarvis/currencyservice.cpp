@@ -43,11 +43,11 @@ ExchangeRateInfo parseExchangeRates(const QByteArray& data)
     info.base = base;
     info.time = QDateTime::fromSecsSinceEpoch(timestamp);
     info.currency1 = {"TRY",
-                      Measurement::parseMeasurement(QString::number(rateTRY))};
+                      MeasurementHelpers::parseMeasurement(QString::number(rateTRY))};
     info.currency2 = {"USD",
-                      Measurement::parseMeasurement(QString::number(rateUSD))};
+                      MeasurementHelpers::parseMeasurement(QString::number(rateUSD))};
     info.currency3 = {"GBP",
-                      Measurement::parseMeasurement(QString::number(rateGBP))};
+                      MeasurementHelpers::parseMeasurement(QString::number(rateGBP))};
     return info;
 }
 } // namespace helpers

@@ -17,7 +17,7 @@ target_sources(${PROJECT_NAME}
         "appsettings.hpp"
 )
 
-include_directories ("${PROJECT_SOURCE_DIR}/libjarvis")
+include_directories("${PROJECT_SOURCE_DIR}/libjarvis")
 add_subdirectory(libjarvis)
 add_subdirectory(tests)
 #add_subdirectory(resources)

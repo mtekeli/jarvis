@@ -2,8 +2,26 @@
 
 #include <QDebug>
 
-Measurement::Measurement(const QString& real, const QString& decimals,
-                         QObject* parent)
+namespace MeasurementHelpers
+{
+    MeasurementInfo parseMeasurement(const QString& value)
+    {
+        if (value.isEmpty())
+            return {};
+
+        if (!value.contains(QStringLiteral(".")))
+            return {value};
+
+        const auto figures = value.split('.');
+        if (figures.length() != 2)
+            return {};
+
+        return {figures[0], figures[1]};
+    }
+
+} // namespace MeasurementHelpers
+
+Measurement::Measurement(const QString& real, const QString& decimals, QObject* parent)
     : QObject{parent}, _real(real), _decimals(decimals)
 {
     // qDebug() << QStringLiteral("CREATING MEASUREMENT ") << this;
@@ -30,16 +48,4 @@ void Measurement::setDecimals(const QString& value)
 
     _decimals = value;
     emit decimalsChanged({});
-}
-
-MeasurementInfo Measurement::parseMeasurement(const QString& value)
-{
-    if (!value.contains(QStringLiteral(".")))
-        return {};
-
-    const auto figures = value.split('.');
-    if (figures.length() != 2)
-        return {};
-
-    return {figures[0], figures[1]};
 }
