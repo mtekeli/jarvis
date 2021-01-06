@@ -15,7 +15,7 @@ namespace
 
     QString currentWeatherUrl(const QString& country, const QString& city)
     {
-        return QStringLiteral("http://api.openweathermap.org/data/2.5/"
+        return QStringLiteral("https://api.openweathermap.org/data/2.5/"
                               "weather?q=%1,%2&units=metric&appid=%3")
             .arg(city)
             .arg(country)
@@ -24,7 +24,7 @@ namespace
 
     QString forecastUrl(const QString& country, const QString& city)
     {
-        return QStringLiteral("http://api.openweathermap.org/data/2.5/"
+        return QStringLiteral("https://api.openweathermap.org/data/2.5/"
                               "forecast?cnt=32&q=%1,%2&units=metric&appid=%3")
             .arg(city)
             .arg(country)

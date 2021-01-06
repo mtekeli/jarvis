@@ -1,22 +1,25 @@
 import QtQuick 2.11
 import QtQuick.Window 2.11
-//import com.mtekeli.mirror 1.0
+import mtekeli.jarvis 1.0
 
 Window {
     id: root
 
     property bool initialized: false
 
-    readonly property var weatherService: App.weatherService
-    readonly property var currentWeather: weatherService ? weatherService.currentWeather : null
+    readonly property AirQualityService airQualityService: App.airQualityService
+    readonly property AirQuality airQuality: airQualityService ? airQualityService.airQuality : null
+    readonly property WeatherService weatherService: App.weatherService
+    readonly property CurrentWeather currentWeather: weatherService ? weatherService.currentWeather : null
     readonly property var forecast: weatherService ? weatherService.forecast : null
     readonly property string currentWeatherIcon: currentWeather ? "assets/svg/weather/" + currentWeather.weather + ".svg" : "assets/svg/sun.svg"
+    readonly property string weatherTemperatureReal: currentWeather ? currentWeather.temperature.real : "0"
+    readonly property string weatherTemperatureDecimals: currentWeather ? currentWeather.temperature.decimals.substring(0,1) + "°" : "0"
     readonly property string roomTemperatureReal: RoomService.temperature ? RoomService.temperature.real : "0"
     readonly property string roomTemperatureDecimals: RoomService.temperature ? RoomService.temperature.decimals.substring(0,1) + "°" : "0"
     readonly property string roomHumidityReal: RoomService.humidity ? RoomService.humidity.real : "0"
     readonly property string roomHumidityDecimals: RoomService.humidity ? RoomService.humidity.decimals.substring(0,1) : "0"
-    readonly property string weatherTemperatureReal: currentWeather ? currentWeather.temperature.real : "0"
-    readonly property string weatherTemperatureDecimals: currentWeather ? currentWeather.temperature.decimals.substring(0,1) + "°" : "0"
+
 
     readonly property var currentRates: CurrencyService ? CurrencyService.rates : null
     readonly property var currency1: currentRates ? currentRates.currency1 : null
@@ -138,16 +141,19 @@ Window {
         height: 240
 
         readonly property string state1: "summary"
-        readonly property string state2: "forecast"
-        readonly property string state3: "currency"
+        readonly property string state2: "weather"
+        readonly property string state3: "forecast"
+        readonly property string state4: "currency"
 
         function switchState() {
-            if (state === "" || state === state3)
+            if (state === "" || state === state4)
                 footer.state = state1
             else if (state === state1)
                 footer.state = state2
             else if (state === state2)
                 footer.state = state3
+            else if (state === state3)
+                footer.state = state4
         }
 
         Timer {
@@ -158,8 +164,6 @@ Window {
             repeat: true
             onTriggered: footer.switchState()
         }
-
-        //onStateChanged: console.info("state changed to " + state)
 
         states: [
             State {
@@ -173,13 +177,21 @@ Window {
             State {
                 name: footer.state2
                 PropertyChanges {
-                    target: forecast
+                    target: weather
                     opacity: 1.0
                     height: parent.height
                 }
             },
             State {
                 name: footer.state3
+                PropertyChanges {
+                    target: forecast
+                    opacity: 1.0
+                    height: parent.height
+                }
+            },
+            State {
+                name: footer.state4
                 PropertyChanges {
                     target: currency
                     opacity: 1.0
@@ -220,6 +232,31 @@ Window {
                         easing.type: Easing.InOutQuad
                     }
                     NumberAnimation {
+                        target: weather
+                        property: "opacity"
+                        duration: 1000
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        target: weather
+                        property: "height"
+                        duration: 500
+                        easing.type: Easing.OutSine
+                    }
+                }
+            },
+            Transition {
+                from: footer.state2
+                to: footer.state3
+
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: weather
+                        property: "opacity"
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
                         target: forecast
                         property: "opacity"
                         duration: 1000
@@ -234,8 +271,8 @@ Window {
                 }
             },
             Transition {
-                from: footer.state2
-                to: footer.state3
+                from: footer.state3
+                to: footer.state4
 
                 ParallelAnimation {
                     NumberAnimation {
@@ -259,7 +296,7 @@ Window {
                 }
             },
             Transition {
-                from: footer.state3
+                from: footer.state4
                 to: footer.state1
 
                 ParallelAnimation {
@@ -305,6 +342,25 @@ Window {
             gauge3Decimals: root.weatherTemperatureDecimals
         }
 
+        Weather {
+            id: weather
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            height: - parent.height
+            opacity: 0.0
+            spacing: 130
+            fontName: mainFontRegular.name
+            primaryTextSize: 70
+            secondaryTextSize: 35
+
+            currentAirQuality: root.airQuality
+            currentWeather: root.currentWeather
+            currentWeatherIcon: root.currentWeatherIcon
+            currentTempReal: root.weatherTemperatureReal
+            currentTempDecimals: root.weatherTemperatureDecimals
+        }
+
         Forecast {
             id: forecast
 
@@ -312,14 +368,11 @@ Window {
             anchors.bottom: parent.bottom
             height: - parent.height
             opacity: 0.0
-            currentWeatherIcon: root.currentWeatherIcon
-            primaryText: root.weatherTemperatureReal
-            secondaryText: root.weatherTemperatureDecimals
+            spacing: 60
             fontName: mainFontRegular.name
             primaryTextSize: 70
             secondaryTextSize: 35
 
-            currentWeather: root.currentWeather
             forecast: root.forecast
         }
 

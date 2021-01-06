@@ -14,6 +14,7 @@ Item {
 
         width: root.width
         height: width
+        sourceSize: Qt.size(width, height)
         verticalAlignment: Image.AlignBottom
         fillMode: Image.PreserveAspectFit
         mipmap: true

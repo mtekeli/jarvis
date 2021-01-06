@@ -23,7 +23,7 @@ class ExchangeRate : public QObject
     Q_PROPERTY(Currency* currency3 READ currency3 NOTIFY currency3Changed)
 
 public:
-    ExchangeRate(const ExchangeRateInfo& info, QObject* parent = nullptr);
+    ExchangeRate(const ExchangeRateInfo& info = {}, QObject* parent = nullptr);
 
     QString base() const { return _base; }
     Currency* currency1() const { return _currency1; }

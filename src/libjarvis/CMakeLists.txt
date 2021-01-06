@@ -22,6 +22,10 @@ add_library(libjarvis
     "exchangerate.cpp"
     "currency.hpp"
     "currency.cpp"
+    "airquality.cpp"
+    "airquality.hpp"
+    "airqualityservice.hpp"
+    "airqualityservice.cpp"
 )
 
 source_group("src" REGULAR_EXPRESSION "")

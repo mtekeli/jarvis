@@ -2,7 +2,6 @@
 
 #include "measurement.hpp"
 
-#include <QNetworkAccessManager>
 #include <QObject>
 
 struct WeatherInfo
