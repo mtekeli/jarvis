@@ -37,17 +37,17 @@ ExchangeRateInfo parseExchangeRates(const QByteArray& data)
     const auto rateUSD = rates.value("USD").toDouble();
     const auto rateGBP = rates.value("GBP").toDouble();
 
-    qDebug() << "TRY:" << rateTRY << " USD:" << rateUSD << " GBP" << rateGBP;
+    // qDebug() << "TRY:" << rateTRY << " USD:" << rateUSD << " GBP" << rateGBP;
 
     ExchangeRateInfo info;
     info.base = base;
     info.time = QDateTime::fromSecsSinceEpoch(timestamp);
     info.currency1 = {"TRY",
-                      Measurement::parseMeasurement(QString::number(rateTRY))};
+                      MeasurementHelpers::parseMeasurement(QString::number(rateTRY))};
     info.currency2 = {"USD",
-                      Measurement::parseMeasurement(QString::number(rateUSD))};
+                      MeasurementHelpers::parseMeasurement(QString::number(rateUSD))};
     info.currency3 = {"GBP",
-                      Measurement::parseMeasurement(QString::number(rateGBP))};
+                      MeasurementHelpers::parseMeasurement(QString::number(rateGBP))};
     return info;
 }
 } // namespace helpers
@@ -68,7 +68,7 @@ CurrencyService::CurrencyService(QObject* parent)
 
 void CurrencyService::requestExchangeRates()
 {
-    qDebug() << "requesting exchange rates";
+    // qDebug() << "requesting exchange rates";
     _net.get(QNetworkRequest{{REQUEST_URL}});
 }
 

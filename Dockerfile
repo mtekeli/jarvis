@@ -1,4 +1,4 @@
-ARG QT_VERSION=5.12.5
+ARG QT_VERSION=5.12.7
 ARG NUM_PARALLEL_JOBS=4
 
 FROM mustafatekeli/qtbuilder:amd64-rpi-cross-compile-base-${QT_VERSION}-1

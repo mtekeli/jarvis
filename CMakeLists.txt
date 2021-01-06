@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 project(jarvis LANGUAGES CXX)
 set(jarvis_VERSION_MAJOR 1)
-set(jarvis_VERSION_MINOR 5)
+set(jarvis_VERSION_MINOR 6)
 set(jarvis_DEVICE_IP "$ENV{JARVIS_HOST}")
 set(jarvis_IPDATA_API_KEY "$ENV{IPDATA_API_KEY}")
 set(jarvis_OPEN_WEATHER_API_KEY "$ENV{OPEN_WEATHER_API_KEY}")

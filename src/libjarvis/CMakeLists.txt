@@ -24,6 +24,8 @@ add_library(libjarvis
     "currency.cpp"
 )
 
+source_group("src" REGULAR_EXPRESSION "")
+
 find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 
 target_link_libraries(libjarvis PUBLIC Qt5::Core Qt5::Quick Qt5::Svg)
