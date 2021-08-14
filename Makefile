@@ -35,6 +35,7 @@ docker:
 		--env OPEN_WEATHER_API_KEY=${OPEN_WEATHER_API_KEY} \
 		--env FIXER_EXCHANGES_API_KEY=${FIXER_EXCHANGES_API_KEY} \
 		--env IQAIR_API_KEY=${IQAIR_API_KEY} \
+		--env OPEN_EXCHANGE_API_KEY=${OPEN_EXCHANGE_API_KEY}\
 		mustafatekeli/jarvis-cross-compile
 
 fmt: config

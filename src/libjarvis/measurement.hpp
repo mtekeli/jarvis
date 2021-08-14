@@ -7,14 +7,18 @@ struct MeasurementInfo
     QString real;
     QString decimals;
 
-    MeasurementInfo(QString r = "0", QString d = "0") : real{std::move(r)}, decimals{std::move(d)} {}
-    bool operator==(const MeasurementInfo& other) const {
+    MeasurementInfo(QString r = "0", QString d = "0")
+        : real{std::move(r)}, decimals{std::move(d)}
+    {}
+    bool operator==(const MeasurementInfo& other) const
+    {
         return this->real == other.real && this->decimals == other.decimals;
     }
 };
 
-namespace MeasurementHelpers {
-    MeasurementInfo parseMeasurement(const QString& value);
+namespace MeasurementHelpers
+{
+MeasurementInfo parseMeasurement(const QString& value);
 }
 
 class Measurement : public QObject

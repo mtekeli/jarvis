@@ -11,7 +11,7 @@
 namespace
 {
     constexpr auto REQUEST_INTERVAL = 60 * 60 * 1000;
-    const QString REQUEST_URL = QStringLiteral("http://data.fixer.io/api/latest?access_key=") % FIXER_EXCHANGES_API_KEY;
+    const QString REQUEST_URL = QStringLiteral("https://openexchangerates.org/api/latest.json?app_id=") % OPEN_EXCHANGE_API_KEY;
 } // namespace
 
 namespace helpers
@@ -20,20 +20,21 @@ namespace helpers
     {
         const auto itemDoc    = QJsonDocument::fromJson(data);
         const auto rootObject = itemDoc.object();
-        const auto success    = rootObject.value("success").toBool();
+        const auto hasError   = rootObject.value("error").toBool();
 
-        if (!success)
+        if (hasError)
         {
             qWarning() << "exchange rates contain error: " << data;
             return {};
         }
 
-        const auto rates     = rootObject.value("rates").toObject();
-        const auto timestamp = rootObject.value("timestamp").toInt();
-        const auto base      = rootObject.value("base").toString(); // EUR by default
-        const auto rateTRY   = rates.value("TRY").toDouble();
-        const auto rateUSD   = rates.value("USD").toDouble();
-        const auto rateGBP   = rates.value("GBP").toDouble();
+		const auto rates     = rootObject.value("rates").toObject();
+		const auto timestamp = rootObject.value("timestamp").toInt();
+		const auto base      = rootObject.value("base").toString(); // EUR by default
+		const auto rateEUR   = rates.value("EUR").toDouble();
+		const auto rateUSD   = 1.0 / rateEUR;
+		const auto rateTRY   = rates.value("TRY").toDouble() * rateUSD;
+		const auto rateGBP   = rates.value("GBP").toDouble() * rateUSD;
 
         // qDebug() << "TRY:" << rateTRY << " USD:" << rateUSD << " GBP" << rateGBP;
 
@@ -52,25 +53,25 @@ CurrencyService::CurrencyService(QObject* parent) : QObject(parent), _refreshTim
     connect(&_net, &QNetworkAccessManager::finished, this, &CurrencyService::processReply);
     connect(&_refreshTimer, &QTimer::timeout, this, &CurrencyService::requestExchangeRates);
 
-    _refreshTimer.setInterval(REQUEST_INTERVAL);
-    _refreshTimer.start();
+	_refreshTimer.setInterval(REQUEST_INTERVAL);
+	_refreshTimer.start();
 
-    requestExchangeRates();
+	requestExchangeRates();
 }
 
 void CurrencyService::requestExchangeRates()
 {
-    // qDebug() << "requesting exchange rates";
-    _net.get(QNetworkRequest{{REQUEST_URL}});
+	qDebug() << "requesting exchange rates";
+	_net.get(QNetworkRequest{{REQUEST_URL}});
 }
 
 void CurrencyService::setExchangeRates(const ExchangeRateInfo& info)
 {
-    if (_rates)
-        _rates->deleteLater();
+	if (_rates)
+		_rates->deleteLater();
 
-    _rates = new ExchangeRate{info, this};
-    emit ratesChanged({});
+	_rates = new ExchangeRate{info, this};
+	emit ratesChanged({});
 }
 
 void CurrencyService::processReply(QNetworkReply* reply)
