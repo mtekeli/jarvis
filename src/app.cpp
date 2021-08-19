@@ -1,5 +1,6 @@
 #include "app.hpp"
 #include "appsettings.hpp"
+#include "libjarvis/airqualityservice.hpp"
 #include "libjarvis/currencyservice.hpp"
 #include "libjarvis/locationservice.hpp"
 #include "libjarvis/measurement.hpp"
@@ -8,6 +9,12 @@
 
 #include <QCommandLineParser>
 #include <QQmlContext>
+
+namespace
+{
+    constexpr auto QML_MODULE_JARVIS   = "mtekeli.jarvis";
+    constexpr auto QML_UNCREATABLE_MSG = "This component cannot be init from QML";
+} // namespace
 
 App::App(int argc, char* argv[]) : QGuiApplication(argc, argv)
 {
@@ -29,8 +36,7 @@ void App::setApplicationInfo()
     QCoreApplication::setOrganizationName(QStringLiteral("mtekeli"));
     QCoreApplication::setOrganizationDomain(QStringLiteral("mtekeli.io"));
     QCoreApplication::setApplicationName(QStringLiteral("jarvis"));
-    QCoreApplication::setApplicationVersion(
-        QStringLiteral("%1.%2").arg(majorVersion()).arg(minorVersion()));
+    QCoreApplication::setApplicationVersion(QStringLiteral("%1.%2").arg(majorVersion()).arg(minorVersion()));
 }
 
 void App::processOptions()
@@ -47,22 +53,20 @@ void App::processOptions()
 }
 
 void App::registerComponents()
-{ // qmlRegisterUncreatableType<Measurement>("com.mtekeli.mirror", 1, 0,
+{ // qmlRegisterUncreatableType<Measurement>("mtekeli.jarvis", 1, 0,
     // "Measurement", "Cannot init from QML");
-    // qmlRegisterUncreatableType<Measurement>("com.mtekeli.mirror", 1, 0,
+    // qmlRegisterUncreatableType<Measurement>("mtekeli.jarvis", 1, 0,
     // "Measurement", "Cannot init from QML");
-    // qmlRegisterUncreatableType<RoomService>("com.mtekeli.mirror", 1, 0,
+    // qmlRegisterUncreatableType<RoomService>("mtekeli.jarvis", 1, 0,
     // "RoomService", "Cannot init from QML");
-    // qmlRegisterUncreatableType<Measurement*>("com.mtekeli.mirror", 1, 0,
-    // "Measurement*", "Cannot init from QML");
-    //    qmlRegisterUncreatableType<WeatherService>(
-    //        "com.mtekeli.jarvis", 1, 0, "WeatherService", "Cannot init from
-    //        QML");
-    //    qmlRegisterUncreatableType<CurrentWeather>(
-    //        "com.mtekeli.jarvis", 1, 0, "CurrentWeather", "Cannot init from
-    //        QML");
+    // qmlRegisterUncreatableType<Measurement*>("mtekeli.jarvis", 1, 0,
+    qmlRegisterUncreatableType<AirQualityService>(QML_MODULE_JARVIS, 1, 0, "AirQualityService", QML_UNCREATABLE_MSG);
+    qmlRegisterUncreatableType<WeatherService>(QML_MODULE_JARVIS, 1, 0, "WeatherService", QML_UNCREATABLE_MSG);
+    qmlRegisterType<CurrentWeather>(QML_MODULE_JARVIS, 1, 0, "CurrentWeather");
+    qmlRegisterType<ForecastWeather>(QML_MODULE_JARVIS, 1, 0, "ForecastWeather");
+    qmlRegisterType<ExchangeRate>(QML_MODULE_JARVIS, 1, 0, "ExchangeRate");
+    qmlRegisterType<AirQuality>(QML_MODULE_JARVIS, 1, 0, "AirQuality");
     qRegisterMetaType<Measurement*>("Measurement");
-    qRegisterMetaType<WeatherService*>("WeatherService");
     qRegisterMetaType<CurrentWeather*>("CurrentWeather");
     qRegisterMetaType<ForecastWeather*>("Forecast");
     qRegisterMetaType<Currency*>("Currency*");
@@ -72,13 +76,9 @@ void App::registerComponents()
 
 void App::initializeComponents()
 {
-    _settings = new AppSettings{QGuiApplication::organizationName(),
-                                QGuiApplication::applicationName(), this};
-    _rs = new RoomService{_settings->roomServiceUrl(),
-                          _settings->roomServiceInterval(), this};
-    _ls = new LocationService{
-        QStringLiteral("https://api.ipdata.co/?api-key=%1").arg(IPDATA_API_KEY),
-        this};
+    _settings = new AppSettings{QGuiApplication::organizationName(), QGuiApplication::applicationName(), this};
+    _rs       = new RoomService{_settings->roomServiceUrl(), _settings->roomServiceInterval(), this};
+    _ls       = new LocationService{QStringLiteral("https://api.ipdata.co/?api-key=%1").arg(IPDATA_API_KEY), this};
     _ls->setEnabled(!_isDev);
 
     if (_settings->useIpLocation())
@@ -92,19 +92,16 @@ void App::initializeComponents()
         });
     else
     {
-        _ws = new WeatherService{_settings->countryCode(), _settings->city(),
-                                 this};
+        _ws = new WeatherService{_settings->countryCode(), _settings->city(), this};
         _ws->setEnabled(!_isDev);
     }
 
     _cs = new CurrencyService{this};
+    _as = new AirQualityService{this};
 
-    engine.rootContext()->setContextProperty(QStringLiteral("RoomService"),
-                                             _rs);
-    engine.rootContext()->setContextProperty(QStringLiteral("LocationService"),
-                                             _ls);
-    engine.rootContext()->setContextProperty(QStringLiteral("CurrencyService"),
-                                             _cs);
+    engine.rootContext()->setContextProperty(QStringLiteral("RoomService"), _rs);
+    engine.rootContext()->setContextProperty(QStringLiteral("LocationService"), _ls);
+    engine.rootContext()->setContextProperty(QStringLiteral("CurrencyService"), _cs);
     engine.rootContext()->setContextProperty(QStringLiteral("App"), this);
     engine.load(QUrl{QStringLiteral("qrc:/MainWindow.qml")});
 }

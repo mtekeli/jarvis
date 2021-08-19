@@ -1,16 +1,13 @@
 import QtQuick 2.11
+import mtekeli.jarvis 1.0
 
 Row {
     id: root
 
-    property var currentWeather
     property var forecast
-    property alias currentWeatherIcon: currentWeatherIcon.source
-    property alias primaryText: meter.primaryText
-    property alias secondaryText: meter.secondaryText
-    property alias primaryTextSize: meter.primaryTextSize
-    property alias secondaryTextSize: meter.secondaryTextSize
-    property alias fontName: meter.fontName
+    property string fontName
+    property int primaryTextSize: 60
+    property int secondaryTextSize: 32
 
     property string _stateShowMin: "showMinimum"
 
@@ -72,93 +69,6 @@ Row {
         }
     ]
 
-    Column {
-        ImageWithOverlay {
-            id: currentWeatherIcon
-
-            width: 100
-            height: width
-            colorize: true
-            color: "white"
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-
-        Meter {
-            id: meter
-
-            height: width
-            anchors.horizontalCenter: parent.horizontalCenter
-            primaryTextSize: 64
-            secondaryTextSize: 48
-        }
-    }
-
-    Column {
-        Row {
-            spacing: 10
-
-            Text {
-                id: wind
-
-                anchors.verticalCenter: parent.verticalCenter
-                text: (currentWeather ? currentWeather.windSpeed : "0") + "bft"
-                color: "white"
-                font.pixelSize: 22
-                font.family: fontName
-            }
-
-            ImageWithOverlay {
-                id: windDirection
-
-                width: 30
-                height: width
-                colorize: true
-                color: "white"
-                source: "assets/svg/down-arrow.svg"
-                visible: currentWeather && currentWeather.windDegree >= 0
-
-                transform: Rotation{
-                    angle: currentWeather && currentWeather.windDegree > 0 ? currentWeather.windDegree : 0
-                    origin.x: windDirection.width / 2
-                    origin.y: windDirection.height / 2
-                }
-            }
-        }
-
-        Text {
-            id: minTemperature
-            text: (currentWeather ? currentWeather.tempMin + "-" + currentWeather.tempMax : "0-0") + "°"
-            color: "white"
-            font.pixelSize: 22
-            font.family: fontName
-        }
-
-        Text {
-            id: humidity
-            text: (currentWeather ? currentWeather.humidity : "0") + "%"
-            color: "white"
-            font.pixelSize: 22
-            font.family: fontName
-        }
-
-        Text {
-            id: pressure
-            text: (currentWeather ? currentWeather.pressure : "0") + "hpa"
-            color: "white"
-            font.pixelSize: 22
-            font.family: fontName
-        }
-
-        Text {
-            id: rain
-            text: currentWeather ? currentWeather.rain : "0"
-            color: "white"
-            font.pixelSize: 22
-            font.family: fontName
-            visible: text != "0"
-        }
-    }
-
     Item {
         width: childrenRect.width
         height: 200
@@ -166,12 +76,12 @@ Row {
         Summary {
             id: minForecast
 
-            spacing: 5
             height: parent.height
             y: parent.height / 2
             opacity: 0
-            primaryTextSize: 60
-            secondaryTextSize: 30
+            spacing: root.spacing
+            primaryTextSize: root.primaryTextSize
+            secondaryTextSize: root.secondaryTextSize
             fontName: root.fontName
 
             gauge1Icon: "assets/svg/weather/" + root.forecast[0].minWeather
@@ -188,12 +98,12 @@ Row {
         Summary {
             id: maxForecast
 
-            opacity: 1.0
             height: parent.height
-            spacing: 5
+            opacity: 1.0
+            spacing: root.spacing
             y: 0
-            primaryTextSize: 60
-            secondaryTextSize: 30
+            primaryTextSize: root.primaryTextSize
+            secondaryTextSize: root.secondaryTextSize
             fontName: root.fontName
 
             gauge1Icon: "assets/svg/weather/" + root.forecast[0].maxWeather

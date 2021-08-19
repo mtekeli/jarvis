@@ -30,5 +30,11 @@
         <file>assets/svg/currency/USD.svg</file>
         <file>assets/svg/currency/GBP.svg</file>
         <file>assets/svg/currency/placeholder.svg</file>
+        <file>assets/svg/airquality/face-good.svg</file>
+        <file>assets/svg/airquality/face-moderate.svg</file>
+        <file>assets/svg/airquality/face-unhealthy1.svg</file>
+        <file>assets/svg/airquality/face-unhealthy2.svg</file>
+        <file>assets/svg/airquality/face-very-unhealthy.svg</file>
+        <file>assets/svg/airquality/face-hazardous.svg</file>
     </qresource>
 </RCC>

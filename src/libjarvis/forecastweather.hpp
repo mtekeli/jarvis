@@ -24,7 +24,7 @@ class ForecastWeather : public QObject
     Q_PROPERTY(QString minWeather READ minWeather NOTIFY minWeatherChanged)
 
 public:
-    ForecastWeather(const ForecastInfo& info, QObject* parent = nullptr);
+    ForecastWeather(const ForecastInfo& info = {}, QObject* parent = nullptr);
     ~ForecastWeather();
 
     Measurement* maxTemperature() const { return _maxTemperature; }
